@@ -75,6 +75,10 @@ budget may beat rule 3.
 - [references/clouds-by-altitude.md](references/clouds-by-altitude.md):
   what to draw in each altitude band of a planet, with techniques and
   sources.
+- [references/earth-cloud-transitions.md](references/earth-cloud-transitions.md):
+  a source-inspected Earth example of streamed cloud maps, stable cloud-top
+  detail and a globe-to-volume transition. Read when a camera must descend
+  from orbit into clouds; its distances and budgets are examples, not defaults.
 - [references/ray-marching.md](references/ray-marching.md): march
   structure, camera inside a shell, grazing rays, lighting, cost.
 - [references/symptoms.md](references/symptoms.md): what a bad frame looks

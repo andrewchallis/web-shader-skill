@@ -2,8 +2,12 @@
 
 Heights are rough and scale with the planet radius R. On a gas giant
 (Jupiter R = 71,492 km) 0.05 R is about 3,500 km. The bands are where the
-look *needs* to change; the renderer should stay the same and only let
-detail grow (see SKILL.md rule 1).
+look *needs* to change; prefer growing detail in the same renderer (see
+SKILL.md rule 1). A globe shader and a local volume can also work together
+when they share coverage, coordinates, light and a checked compositing
+transition. See [Earth cloud transitions](earth-cloud-transitions.md) for
+one inspected implementation; its Earth thresholds do not scale directly
+to gas giants.
 
 ## Orbit: above about 1 R
 
@@ -67,6 +71,8 @@ detail grow (see SKILL.md rule 1).
 
 - Cloud fields need a slow clock. At the speed that looks fine from orbit,
   a close field flows like liquid or plasma. Scale the clock down for close
-  views (we ended at a fiftieth of the first pace).
+  views (we ended at a fiftieth of the first pace). When multiple cloud
+  renderers overlap, give them the same continuous clock and wind field;
+  changing renderer or quality must not reset or relocate the weather.
 - Separate churn from camera motion with a frozen-clock clip before tuning
   either.

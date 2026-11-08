@@ -23,6 +23,10 @@ Or copy `skills/web-shader-rendering/` into a project's `.claude/skills/`.
 - `SKILL.md`: defaults that held up, and the look-dev workflow.
 - `references/clouds-by-altitude.md`: what to draw from orbit down to
   skimming height.
+- `references/earth-surface-streaming.md`: surface imagery, tile budgets,
+  camera controls, local frames, atmosphere and terrain.
+- `references/earth-cloud-transitions.md`: shared cloud fields and the
+  globe-to-volume transition.
 - `references/ray-marching.md`: shells, grazing rays, density, light, cost.
 - `references/symptoms.md`: bad frame, cause, fix.
 - `references/webgpu-webgl2.md`: TSL and backend gotchas.

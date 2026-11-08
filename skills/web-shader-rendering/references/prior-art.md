@@ -63,6 +63,10 @@ street-level terrain.
   procedural coastal relief; this is not evidence of a worldwide
   high-resolution Earth elevation model.
 
+Read [Earth surface streaming](earth-surface-streaming.md) for tile
+selection, imagery composition, camera handling, atmosphere and terrain
+limits, including a dated comparison with an existing implementation.
+
 Read [Earth cloud transitions](earth-cloud-transitions.md) for the verified
 cloud modules, exact example settings, blending constraints and motion
 checks. The transferable lesson is shared fields and consistent filtering,

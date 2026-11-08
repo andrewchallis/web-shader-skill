@@ -75,6 +75,10 @@ budget may beat rule 3.
 - [references/clouds-by-altitude.md](references/clouds-by-altitude.md):
   what to draw in each altitude band of a planet, with techniques and
   sources.
+- [references/earth-surface-streaming.md](references/earth-surface-streaming.md):
+  streamed surface imagery, colour matching, camera clearance, local frames,
+  atmosphere and terrain limits. Read for orbit-to-surface navigation or
+  before extending an existing globe renderer.
 - [references/earth-cloud-transitions.md](references/earth-cloud-transitions.md):
   a source-inspected Earth example of streamed cloud maps, stable cloud-top
   detail and a globe-to-volume transition. Read when a camera must descend

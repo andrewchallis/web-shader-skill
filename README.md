@@ -26,6 +26,7 @@ Or copy `skills/web-shader-rendering/` into a project's `.claude/skills/`.
 - `references/ray-marching.md`: shells, grazing rays, density, light, cost.
 - `references/symptoms.md`: bad frame, cause, fix.
 - `references/webgpu-webgl2.md`: TSL and backend gotchas.
+- `references/prior-art.md`: open-source cloud renderers worth studying.
 - `sources/`: original shader code whose licence allows sharing.
 
 ## Licence

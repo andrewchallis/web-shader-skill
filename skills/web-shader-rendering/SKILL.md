@@ -82,6 +82,9 @@ budget may beat rule 3.
 - [references/webgpu-webgl2.md](references/webgpu-webgl2.md): TSL and
   backend gotchas, WebGL2 limits, precision, pipeline count, software
   renderer traps.
+- [references/prior-art.md](references/prior-art.md): full open-source
+  cloud renderers (takram three-clouds, joshbrew WebGPU clouds) and what
+  to take from each. Read before designing a new cloud renderer.
 - [sources/](sources/README.md): original shader code we were given, with
   licences and where each one is ported.
 

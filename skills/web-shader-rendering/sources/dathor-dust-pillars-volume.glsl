@@ -1,7 +1,7 @@
 // Reference only: the "Volume A" tab (baked SDF) of "Where James Webb Cannot
 // Reach" by dathor / Nullpunkt42 (https://www.shadertoy.com/view/7XyXRV,
 // 2 Nov 2026), copied 5 Nov 2026.
-// Licence: the Image tab header says "Free for anyone to use". Inspired by FabriceNeyret2's "Volumetric Perlin to exact
+// Licence: Inspired by FabriceNeyret2's "Volumetric Perlin to exact
 // SDF" (https://www.shadertoy.com/view/NXGSRK). The hashes are Dave Hoskins'
 // "Hash without Sine" (MIT). Credit all three when porting.
 //

@@ -10,7 +10,7 @@ so you can ask a human for the original if you need it.
 | File | Source | Licence | Good for |
 | --- | --- | --- | --- |
 | [fast-atmosphere-clouds.glsl](fast-atmosphere-clouds.glsl) | Felix Westin, Fast Atmosphere ([lcfSRl](https://www.shadertoy.com/view/lcfSRl)), cloud parts | MIT (notice in file); `CloudShape` from csSfRK left out (unknown licence) | map as coverage with edges carved by finer noise; cheap 4-step Sun light |
-| [dathor-dust-pillars-volume.glsl](dathor-dust-pillars-volume.glsl) | dathor, Where James Webb Cannot Reach ([7XyXRV](https://www.shadertoy.com/view/7XyXRV)), Volume A tab | "Free for anyone to use"; Hoskins hashes MIT | baking a tileable SDF of columns on a turbulent floor into a 3D texture |
+| [dathor-dust-pillars-volume.glsl](dathor-dust-pillars-volume.glsl) | dathor, Where James Webb Cannot Reach ([7XyXRV](https://www.shadertoy.com/view/7XyXRV)), Volume A tab |  Hoskins hashes MIT | baking a tileable SDF of columns on a turbulent floor into a 3D texture |
 | [dathor-dust-pillars-march.glsl](dathor-dust-pillars-march.glsl) | same, Buffer A march and shading (no backdrop or stars) | same | adaptive steps, light visibility taps, rim glow, lit smoke floor |
 
 Not copied here (CC BY-NC-SA 3.0: adapting needs credit and makes the

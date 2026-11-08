@@ -24,4 +24,6 @@ in our cloud and gas work.
 | Glowing dome or grey fog over everything | Density added before the threshold, or broad extra layers | Add density after the threshold, keep extra layers thin |
 | Far frame correct, close look grey or flat | Camera offset lost in float32 shader matrices when very close to a huge object | Pass the eye position from JS (double precision) as a uniform, relative to the object |
 | Port of a reference looks dull | Output went through sRGB or tone mapping the original didn't use | Match the original's output (linear, its own grade) before judging |
+| Clouds shimmer, boil or slide as the camera moves | Samples at fixed distances from the camera slide through the cloud; per-frame jitter | Sample on world-anchored planes; no per-frame randomness in shape; temporal accumulation for noise |
+| Thin far wisps flicker or pop | Edge density ramp as sharp far away as close up; hard far limit | Widen the edge ramp with distance; fade cloud out over the end of the march |
 | Change "did nothing" | Wrong layer is the one drawing at that height, or a guard hid it | Tint layers flat colours to see which one draws |

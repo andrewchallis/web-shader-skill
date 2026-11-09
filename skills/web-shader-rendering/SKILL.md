@@ -86,6 +86,9 @@ budget may beat rule 3.
 - [references/cloud-types.md](references/cloud-types.md): settings and
   looks for the ten Earth cloud types, and how they carry over to gas
   giant decks and haze.
+- [references/ck42bb-procedural-clouds.md](references/ck42bb-procedural-clouds.md):
+  full text of the CK42BB clouds skill (MIT): mesh and billboard clouds
+  for cheap far detail, lighting model, god rays, presets.
 - [references/ray-marching.md](references/ray-marching.md): march
   structure, camera inside a shell, grazing rays, lighting, cost.
 - [references/symptoms.md](references/symptoms.md): what a bad frame looks

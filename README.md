@@ -38,5 +38,5 @@ Or copy `skills/web-shader-rendering/` into a project's `.claude/skills/`.
 
 The skill's own text is MIT. Files in `sources/` keep their authors'
 licences, given in each file's header.
-`references/cloud-types.md` is adapted from Kingsley (CK42BB)'s
-procedural-clouds-threejs skill, MIT; its notice is at the end of that file.
+`references/cloud-types.md` and `references/ck42bb-procedural-clouds.md` are adapted from Kingsley (CK42BB)'s
+procedural-clouds-threejs skill, MIT; the notice is at the end of each file.

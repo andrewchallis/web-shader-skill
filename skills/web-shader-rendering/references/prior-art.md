@@ -125,7 +125,8 @@ Take from it:
 
 - Its cloud type profiles are merged into this skill as
   [cloud-types.md](cloud-types.md) (with how they carry over to gas giants)
-  and its shaders as
+  its full skill text as
+  [ck42bb-procedural-clouds.md](ck42bb-procedural-clouds.md), and its shaders as
   [sources/ck42bb-procedural-clouds-shaders.md](../sources/ck42bb-procedural-clouds-shaders.md).
 - Its performance notes agree with ours: bake 3D noise once (128^3 RGBA8
   is 8 MB), blue noise jitter on the start step, quarter-res or half-res

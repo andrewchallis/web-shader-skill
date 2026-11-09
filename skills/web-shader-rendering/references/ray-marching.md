@@ -70,3 +70,20 @@ Practical structure for clouds, haze and gas drawn on proxy geometry
   Perlin is still better for slope light (smooth derivatives).
 - Measure GPU time with timestamp queries on the target GPU before and
   after; a still that looks the same proves nothing about cost.
+- A single page load's GPU reading can be off by a lot: on a desktop RTX
+  in Chrome, the same scene read in one of two states about 9 ms apart
+  (about 28 or 37 ms) depending on the load, not the setting. Load each
+  variant at least twice, interleaved (A, B, C, then again), and compare
+  the lower reading of each. Treat differences smaller than the gap as
+  noise. Close views with short frames were steady to about 0.5 ms.
+- Judge cost on the real camera path in the app, not only in a lab
+  framing: a setting that saved 10 ms at 3,000 km in the lab cost 2-3 ms
+  more on a skim that spends its time at 300 km.
+- A domain warp or swirl that is fixed in space (a vortex field, hashed
+  cell placement) costs its trig per sample, several times per sample if
+  the shape is read for slopes and tint too. Bake it once into a texture
+  (an offset per point) and read it back.
+- When the camera is on rails, bake only what that path can see (the
+  corridor and the horizon from it), only when the shot starts, and skip
+  the baked branches outside the patch; then prove the bake count stays
+  zero on views that can't show it.

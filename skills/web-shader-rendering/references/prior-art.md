@@ -177,6 +177,37 @@ Take from it:
 - Its fixed 80-step march with 6 light steps is a demo budget, not a
   guide for planet scales.
 
+## CK42BB starfield, weather and landscape skills (MIT)
+
+The same author as the clouds skill has three sibling skills, copied whole
+into `sources/` (MIT). Same caveat: teaching samples for an Earth-ground
+view, not tested at our scales.
+
+- [procedural-stars-threejs](https://github.com/CK42BB/procedural-stars-threejs)
+  (`4c04e03`) -> [sources/ck42bb-procedural-starfield.md](../sources/ck42bb-procedural-starfield.md).
+  Most relevant to Elsewhere's skies and nebulae. Useful bits: uniform
+  sphere placement with `acos(2r-1)` (linear sampling clusters at poles);
+  blackbody colour per star (all-white stars look fake); point size from
+  magnitude, twinkle in the vertex shader, one Points draw; Milky Way as
+  FBM band with dust lanes subtracted and a brighter core; nebula types
+  (emission, reflection, dark absorption, planetary) with a 48-step cap on
+  the raymarched one and a pre-baked billboard as the cheap option; layer
+  radii for parallax; explicit render order and additive blending without
+  depth writes; a WGSL compute shader that builds a star catalogue.
+- [procedural-weather-threejs](https://github.com/CK42BB/procedural-weather-threejs)
+  (`26ad580`) -> [sources/ck42bb-procedural-weather.md](../sources/ck42bb-procedural-weather.md).
+  Aurora curtains (vertex-displaced plane), dust storm and ground fog
+  shaders, branching lightning, one shared wind field driving every
+  effect, eased state transitions (no pops), camera-centred particle spawn
+  box, GPU particle update in WGSL. Ideas for Jupiter lightning, aurora on
+  the giants and Mars dust.
+- [procedural-landscapes-threejs](https://github.com/CK42BB/procedural-landscapes-threejs)
+  (`f7c147a`) -> [sources/ck42bb-procedural-landscapes.md](../sources/ck42bb-procedural-landscapes.md).
+  Noise recipes (FBM, ridged multifractal, domain warp, terraces,
+  combined multiplicatively), seed handling, WGSL compute heightmap,
+  normals and hydraulic erosion, chunk seams fixed by sampling identical
+  world-space noise. Relevant to Mars and Moon close terrain.
+
 ## gokayfem shader-skills (MIT, GLSL)
 
 [shader-skills](https://github.com/gokayfem/shader-skills) (checked at

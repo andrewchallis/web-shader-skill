@@ -14,6 +14,9 @@ so you can ask a human for the original if you need it.
 | [dathor-dust-pillars-march.glsl](dathor-dust-pillars-march.glsl) | same, Buffer A march and shading (no backdrop or stars) | same | adaptive steps, light visibility taps, rim glow, lit smoke floor |
 | [ck42bb-procedural-clouds-shaders.md](ck42bb-procedural-clouds-shaders.md) | Kingsley (CK42BB), [procedural-clouds-threejs](https://github.com/CK42BB/procedural-clouds-threejs) `cloud-shaders.md` | MIT (notice in file) | simple GLSL volumetric, mesh and billboard clouds; WGSL compute Perlin + Worley 3D noise; TSL cloud material |
 | [gokayfem-volume.glsl](gokayfem-volume.glsl) | gokayfem, [shader-skills](https://github.com/gokayfem/shader-skills) `glsl/volume.glsl` | MIT (notice in file) | energy-conserving volume step, dual-lobe HG and Cornette-Shanks phase, Beer-powder, height fog |
+| [ck42bb-procedural-starfield.md](ck42bb-procedural-starfield.md) | Kingsley (CK42BB), [procedural-stars-threejs](https://github.com/CK42BB/procedural-stars-threejs), full skill + shaders + catalogue | MIT (notice in file) | blackbody star colours, magnitude point sizes, vertex twinkle, Milky Way dust lanes, raymarched emission/absorption nebulae, WGSL star catalogue compute |
+| [ck42bb-procedural-weather.md](ck42bb-procedural-weather.md) | same author, [procedural-weather-threejs](https://github.com/CK42BB/procedural-weather-threejs) | MIT (notice in file) | aurora curtains, dust/sandstorm and ground fog shaders, lightning, GPU particle update, lens overlays |
+| [ck42bb-procedural-landscapes.md](ck42bb-procedural-landscapes.md) | same author, [procedural-landscapes-threejs](https://github.com/CK42BB/procedural-landscapes-threejs) | MIT (notice in file) | ridged multifractal, domain warp, terraces; WGSL heightmap, normals and hydraulic erosion compute |
 
 Not copied here (CC BY-NC-SA 3.0: adapting needs credit and makes the
 result non-commercial):

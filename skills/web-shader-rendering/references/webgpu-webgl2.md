@@ -3,6 +3,12 @@
 TSL compiles to WGSL (WebGPU) and GLSL ES 3.0 (WebGL2). Things that work on
 one backend can fail on the other, and on one GPU driver but not another.
 
+New to raw WebGPU? [WebGPU explained](https://dev.to/biomathcode/webgpu-explained-the-browsers-new-graphics-and-compute-engine-1cld)
+(Pratik Sharma, dev.to, July 2026) is a plain introduction: adapter and
+device, explicit pipelines and bind groups, command encoding, WGSL and
+compute shaders, compared with WebGL's state machine. Background only; it
+has no TSL or Three.js specifics.
+
 ## TSL
 
 - An `If()` inside a helper function called several times can give biased

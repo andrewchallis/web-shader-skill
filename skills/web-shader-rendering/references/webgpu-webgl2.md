@@ -9,6 +9,22 @@ device, explicit pipelines and bind groups, command encoding, WGSL and
 compute shaders, compared with WebGL's state machine. Background only; it
 has no TSL or Three.js specifics.
 
+For tools and examples beyond this skill, [awesome-webgpu](https://github.com/mikbry/awesome-webgpu)
+(CC0 list, checked Sep 2026) is the general index. The entries worth
+knowing for shader look and cost work:
+
+- [webgpu-inspector](https://github.com/brendan-duncan/webgpu_inspector):
+  a browser extension that captures a frame and shows every pipeline,
+  shader, buffer and texture, with frame capture and GPU timing. The
+  WebGPU counterpart of Spector.js (which only sees WebGL).
+- [WebGPU timestamps](https://amirsojoodi.github.io/posts/WebGPU-Timestamp/)
+  (Amir Sojoodi): how timestamp queries work, for per-pass GPU timing.
+- [Three.js WebGPU examples](https://threejs.org/examples/?q=webgpu): the
+  quickest working reference for a TSL node or compute pattern.
+- [WebGPU 2D fluid simulation](https://github.com/kishimisu/WebGPU-Fluid-Simulation)
+  (kishimisu): stable fluids in WebGPU compute, a starting point for a
+  baked gas or storm motion field.
+
 ## TSL
 
 - An `If()` inside a helper function called several times can give biased

@@ -97,8 +97,8 @@ budget may beat rule 3.
   backend gotchas, WebGL2 limits, precision, pipeline count, software
   renderer traps.
 - [references/prior-art.md](references/prior-art.md): full open-source
-  cloud renderers (Nightscape, joshbrew WebGPU noise and clouds, CK42BB
-  procedural clouds) and an orbit-to-ground globe, and what to take from
+  cloud renderers (Nightscape, takram three-clouds, joshbrew WebGPU noise
+  and clouds, CK42BB procedural clouds) and an orbit-to-ground globe, and what to take from
   each. Read before designing a new cloud renderer.
 - [sources/](sources/README.md): original shader code we were given, with
   licences and where each one is ported.

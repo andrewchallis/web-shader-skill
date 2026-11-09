@@ -72,6 +72,45 @@ cloud modules, exact example settings, blending constraints and motion
 checks. The transferable lesson is shared fields and consistent filtering,
 rather than copying one renderer's altitude thresholds.
 
+## takram three-clouds (MIT, GLSL)
+
+[@takram/three-clouds](https://github.com/takram-design-engineering/three-geospatial/tree/main/packages/clouds)
+(three-geospatial, checked at `b012ad06`, May 2026, MIT, Shota Matsuda):
+geospatial volumetric clouds over a real-size Earth for Three.js. The README
+says "nothing novel here, just a combination of existing techniques", and
+that is its value: a clean, measured reference pipeline. Still GLSL
+post-processing; TSL and WebGPU are planned, not done.
+
+Take from it:
+
+- **Up to four cloud layers in one march**: each layer's coverage sits in
+  one channel (r, g, b, a) of the weather texture and all four are
+  evaluated together as a `vec4`. Each layer has its own altitude, height,
+  density scale, shape and detail amounts, weather exponent and density
+  profile. This is the "cloud types as height bands in one march" idea
+  from [cloud-types.md](cloud-types.md), already built: low cumulus, a mid
+  deck and a thin high layer (e.g. `densityScale 0.003`, no detail) cost
+  one march, not three.
+- **Beer shadow maps**: march the clouds once from the Sun's orthographic
+  view, store what's needed to rebuild optical depth along the Sun ray,
+  then the camera march reads it instead of a light march per sample.
+  The shadow map gets its own temporal filtering to hide its jitter.
+- **Temporal upscale**: the cloud pass marches 1/16 of the pixels and a
+  TAAU-like resolve fills the rest. Their own numbers: on an M3 Max at 4K
+  "High", 92-95 fps with it and 31 without. Known costs: ghosting and
+  smearing through sparse cloud and at disocclusions.
+- **Quality presets** (Low: no shape detail, light shafts or turbulence,
+  coarser march; Medium: no shafts or turbulence; High; Ultra: bigger
+  shadow map). A clean model for a desktop and laptop preset split.
+- Cost grows with total layer height, and heavy erosion wastes samples on
+  rays that miss the cloud. Their suggested fix: use last frame's front
+  depth and sample count, reprojected, to narrow this frame's march range.
+- Aerial perspective is applied with one transmittance-weighted mean
+  cloud depth per pixel: cheap, but wrong where far sparse clouds overlap.
+- Known gaps worth knowing before borrowing: weather tiled on a cube
+  sphere shows seams; every layer's base sits at one height and looks
+  artificial; no views from space yet.
+
 ## joshbrew WebGPU noise textures and volumetric clouds (MIT)
 
 [webgpu_noise_compute_textures](https://github.com/joshbrew/webgpu_noise_compute_textures)

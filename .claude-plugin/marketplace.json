@@ -1,16 +1,19 @@
 {
   "name": "web-shader-rendering",
-  "owner": { "name": "Andrew Challis" },
+  "owner": {
+    "name": "Andrew Challis"
+  },
   "metadata": {
     "description": "Claude skill with lessons for Three.js TSL shaders on WebGPU and WebGL2",
-    "version": "0.1.0"
+    "version": "0.1.1"
   },
   "plugins": [
     {
       "name": "web-shader-rendering",
       "description": "Ray-marched clouds, atmospheres and gas in Three.js TSL: what worked, what failed and why",
       "source": "./",
-      "strict": false
+      "strict": false,
+      "version": "0.1.1"
     }
   ]
 }

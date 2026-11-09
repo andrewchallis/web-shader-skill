@@ -18,6 +18,7 @@ in our cloud and gas work.
 | Black floor or black sky low down | Camera inside a shell drawn FrontSide only, or near plane clips it | DoubleSide/BackSide inside; inner ball for floor rays |
 | Second horizon above the real one | Grazing rays ran out of steps and were shaded in mid-air | Detect missed rays, fall back to a stand-in hit |
 | Pale band at the horizon or along the lit limb | Haze falls off too slowly with height; bright far air shell | Faster haze falloff; low air shell exposure |
+| Grey mush at a low Sun | Cloud colour not tinted by Sun angle | Tint light and ambient by Sun elevation; more forward scattering near the horizon (from the CK42BB clouds skill) |
 | Flat and pale | Ambient or sky light too high | Cut ambient, rely on Sun shadow |
 | Half-lit under a low Sun | Light term too flat at grazing angles | Full cosine falloff, smaller scatter share |
 | Shapes flow like liquid with the camera still | Field clock too fast for close views | Slow the clock (separate churn from camera motion first) |

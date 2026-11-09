@@ -123,25 +123,14 @@ the ground.
 
 Take from it:
 
-- `cloud-types.md`: a parameter profile for each of the ten cloud genera
-  (altitude band, coverage, octaves, Worley blend, base roundness, edge
-  sharpness, absorption, forward and back phase lobes, silver lining, base
-  darkening) plus notes on how each should look at sunset. A useful
-  starting table for Earth cloud layers.
-- **Cloud types carry over to gas giants**, not exactly but closely
-  enough to borrow settings:
-
-  | Earth type | Gas giant look it resembles |
-  | --- | --- |
-  | Stratus, stratocumulus | the smooth or lumpy main cloud deck |
-  | Cumulonimbus | storm towers punching up through the deck, dark base and bright top |
-  | Cirrus, cirrostratus, altostratus | thin high haze over the deck: draw as a veil, not a volume |
-  | Altocumulus, cirrocumulus | "fish-scale" ripples: often an unwanted artefact of cellular noise octaves; use these settings to make it on purpose or to tell why it appears |
-
-  Each type's settings (coverage, edge sharpness, base darkening, forward
-  and back phase lobes) map nearly one to one onto a deck's look values.
-  Keep them as bands in one march with the type chosen per column by a
-  weather map, rather than one shell per type: each shell is another march.
+- Its cloud type profiles are merged into this skill as
+  [cloud-types.md](cloud-types.md) (with how they carry over to gas giants)
+  and its shaders as
+  [sources/ck42bb-procedural-clouds-shaders.md](../sources/ck42bb-procedural-clouds-shaders.md).
+- Its performance notes agree with ours: bake 3D noise once (128^3 RGBA8
+  is 8 MB), blue noise jitter on the start step, quarter-res or half-res
+  march with a bilateral upsample, temporal reprojection marching a
+  quarter of the pixels per frame.
 - Lighting it covers (two-lobe Henyey-Greenstein, Beer-powder, silver
   lining, time-of-day palettes, radial-blur god rays) is the same set this
   skill already uses; nothing new there.

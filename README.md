@@ -27,6 +27,7 @@ Or copy `skills/web-shader-rendering/` into a project's `.claude/skills/`.
   camera controls, local frames, atmosphere and terrain.
 - `references/earth-cloud-transitions.md`: shared cloud fields and the
   globe-to-volume transition.
+- `references/cloud-types.md`: the ten Earth cloud types (from CK42BB, MIT) and gas giant overlap.
 - `references/ray-marching.md`: shells, grazing rays, density, light, cost.
 - `references/symptoms.md`: bad frame, cause, fix.
 - `references/webgpu-webgl2.md`: TSL and backend gotchas.
@@ -37,3 +38,5 @@ Or copy `skills/web-shader-rendering/` into a project's `.claude/skills/`.
 
 The skill's own text is MIT. Files in `sources/` keep their authors'
 licences, given in each file's header.
+`references/cloud-types.md` is adapted from Kingsley (CK42BB)'s
+procedural-clouds-threejs skill, MIT; its notice is at the end of that file.

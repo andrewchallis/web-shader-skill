@@ -12,6 +12,7 @@ so you can ask a human for the original if you need it.
 | [fast-atmosphere-clouds.glsl](fast-atmosphere-clouds.glsl) | Felix Westin, Fast Atmosphere ([lcfSRl](https://www.shadertoy.com/view/lcfSRl)), cloud parts | MIT (notice in file); `CloudShape` from csSfRK left out (unknown licence) | map as coverage with edges carved by finer noise; cheap 4-step Sun light |
 | [dathor-dust-pillars-volume.glsl](dathor-dust-pillars-volume.glsl) | dathor, Where James Webb Cannot Reach ([7XyXRV](https://www.shadertoy.com/view/7XyXRV)), Volume A tab |  Hoskins hashes MIT | baking a tileable SDF of columns on a turbulent floor into a 3D texture |
 | [dathor-dust-pillars-march.glsl](dathor-dust-pillars-march.glsl) | same, Buffer A march and shading (no backdrop or stars) | same | adaptive steps, light visibility taps, rim glow, lit smoke floor |
+| [ck42bb-procedural-clouds-shaders.md](ck42bb-procedural-clouds-shaders.md) | Kingsley (CK42BB), [procedural-clouds-threejs](https://github.com/CK42BB/procedural-clouds-threejs) `cloud-shaders.md` | MIT (notice in file) | simple GLSL volumetric, mesh and billboard clouds; WGSL compute Perlin + Worley 3D noise; TSL cloud material |
 
 Not copied here (CC BY-NC-SA 3.0: adapting needs credit and makes the
 result non-commercial):

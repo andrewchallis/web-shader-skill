@@ -83,6 +83,12 @@ budget may beat rule 3.
   a source-inspected Earth example of streamed cloud maps, stable cloud-top
   detail and a globe-to-volume transition. Read when a camera must descend
   from orbit into clouds; its distances and budgets are examples, not defaults.
+- [references/cloud-types.md](references/cloud-types.md): settings and
+  looks for the ten Earth cloud types, and how they carry over to gas
+  giant decks and haze.
+- [references/ck42bb-procedural-clouds.md](references/ck42bb-procedural-clouds.md):
+  full text of the CK42BB clouds skill (MIT): mesh and billboard clouds
+  for cheap far detail, lighting model, god rays, presets.
 - [references/ray-marching.md](references/ray-marching.md): march
   structure, camera inside a shell, grazing rays, lighting, cost.
 - [references/symptoms.md](references/symptoms.md): what a bad frame looks
@@ -91,8 +97,9 @@ budget may beat rule 3.
   backend gotchas, WebGL2 limits, precision, pipeline count, software
   renderer traps.
 - [references/prior-art.md](references/prior-art.md): full open-source
-  cloud renderers (takram three-clouds, joshbrew WebGPU clouds, Nightscape)
-  and an orbit-to-ground globe, and what to take from each. Read before designing a new cloud renderer.
+  cloud renderers (Nightscape, joshbrew WebGPU noise and clouds, CK42BB
+  procedural clouds) and an orbit-to-ground globe, and what to take from
+  each. Read before designing a new cloud renderer.
 - [sources/](sources/README.md): original shader code we were given, with
   licences and where each one is ported.
 

@@ -71,3 +71,69 @@ Read [Earth cloud transitions](earth-cloud-transitions.md) for the verified
 cloud modules, exact example settings, blending constraints and motion
 checks. The transferable lesson is shared fields and consistent filtering,
 rather than copying one renderer's altitude thresholds.
+
+## joshbrew WebGPU noise textures and volumetric clouds (MIT)
+
+[webgpu_noise_compute_textures](https://github.com/joshbrew/webgpu_noise_compute_textures)
+(checked at `c0b25edb`, 5 Nov 2026, MIT; [demo](http://webgpunoise.netlify.app/))
+is a raw WebGPU (WGSL compute, no Three.js) noise toolkit. It now also holds
+the author's volumetric cloud renderer under `tools/clouds/` (the older
+[webgpu_realtime_clouds](https://github.com/joshbrew/webgpu_realtime_clouds)
+repo; [demo](https://webgpuclouds.netlify.app/)) and a GPU planet mesh path
+under `tools/planet/`. MIT, so code may be ported with the licence notice;
+it still has to be rewritten as TSL to run in Three.js.
+
+Take from it:
+
+- **Toroidal 3D volumes from 4D noise**: a seamless tiling 3D texture is
+  made by sampling 4D noise on two circles (see its toroidal explainer,
+  `tools/noise/toroidal_explainer.html`). Kernels for Perlin, Worley,
+  cellular, billow, FBM and Voronoi blends all come in 4D form. Use this
+  when a baked cloud or gas volume must tile with no seam.
+- **One compute entry point per kernel** (about 90: Perlin, billow, ridged
+  multifractal, FBM, Worley/cellular, Voronoi variants, curl, domain warp,
+  Gabor, foam, terrace, blue noise, normals, Gaussian blur), stacked in
+  ordered passes onto a cleared target. Separate entry points compile fast,
+  and only the chosen ones build pipelines.
+- Big textures are split into tiles (2D) or chunks (3D) under a size cap,
+  with ping-pong storage and explicit disposal.
+- **Cloud renderer** (`tools/clouds/clouds.js`, `CloudComputeBuilder`): a
+  compute pass that marches a world box using weather, shape and detail
+  textures plus blue noise, with weather-column empty skipping, per-column
+  height bounds from the weather map, an early out for rays that miss the
+  cloud band, adaptive steps in thick boxes, a cheaper "far proxy" sample
+  for small far clouds, and temporal interleave (only a subset of pixels
+  marched each frame, history copied forward).
+- **Planet clouds** (`planetClouds.js`, `planetCloudNoise.js`,
+  `shaders/cloudPlanet.wgsl`, `planetGasAppearance.wgsl`): a styled planet
+  raymarch layer, baked gas curl for weather motion and a shared gas-giant
+  palette. Worth reading before more Jupiter or Saturn deck work.
+- Its tests check weather continuity across phase joins and wind-cell
+  boundaries, with a deliberately broken baseline that must fail: a good
+  pattern for proving a pop is gone.
+
+## CK42BB procedural clouds skill (MIT)
+
+[procedural-clouds-threejs](https://github.com/CK42BB/procedural-clouds-threejs)
+(checked at `fb4a1b22`, Feb 2026, MIT) is a Claude Code skill for Three.js
+sky clouds: a volumetric raymarch on WebGPU, instanced soft-sphere clusters
+and billboards as WebGL2 fallbacks. It is a teaching skill with sample
+shaders, not a tested renderer, and it is about Earth-style skies seen from
+the ground.
+
+Take from it:
+
+- Its cloud type profiles are merged into this skill as
+  [cloud-types.md](cloud-types.md) (with how they carry over to gas giants)
+  its full skill text as
+  [ck42bb-procedural-clouds.md](ck42bb-procedural-clouds.md), and its shaders as
+  [sources/ck42bb-procedural-clouds-shaders.md](../sources/ck42bb-procedural-clouds-shaders.md).
+- Its performance notes agree with ours: bake 3D noise once (128^3 RGBA8
+  is 8 MB), blue noise jitter on the start step, quarter-res or half-res
+  march with a bilateral upsample, temporal reprojection marching a
+  quarter of the pixels per frame.
+- Lighting it covers (two-lobe Henyey-Greenstein, Beer-powder, silver
+  lining, time-of-day palettes, radial-blur god rays) is the same set this
+  skill already uses; nothing new there.
+- Its fixed 80-step march with 6 light steps is a demo budget, not a
+  guide for planet scales.

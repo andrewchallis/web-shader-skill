@@ -128,6 +128,20 @@ Take from it:
   sharpness, absorption, forward and back phase lobes, silver lining, base
   darkening) plus notes on how each should look at sunset. A useful
   starting table for Earth cloud layers.
+- **Cloud types carry over to gas giants**, not exactly but closely
+  enough to borrow settings:
+
+  | Earth type | Gas giant look it resembles |
+  | --- | --- |
+  | Stratus, stratocumulus | the smooth or lumpy main cloud deck |
+  | Cumulonimbus | storm towers punching up through the deck, dark base and bright top |
+  | Cirrus, cirrostratus, altostratus | thin high haze over the deck: draw as a veil, not a volume |
+  | Altocumulus, cirrocumulus | "fish-scale" ripples: often an unwanted artefact of cellular noise octaves; use these settings to make it on purpose or to tell why it appears |
+
+  Each type's settings (coverage, edge sharpness, base darkening, forward
+  and back phase lobes) map nearly one to one onto a deck's look values.
+  Keep them as bands in one march with the type chosen per column by a
+  weather map, rather than one shell per type: each shell is another march.
 - Lighting it covers (two-lobe Henyey-Greenstein, Beer-powder, silver
   lining, time-of-day palettes, radial-blur god rays) is the same set this
   skill already uses; nothing new there.

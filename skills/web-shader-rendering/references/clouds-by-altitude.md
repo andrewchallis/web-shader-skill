@@ -67,6 +67,18 @@ to gas giants.
   Draw the air shell's back faces from inside (or march from the camera),
   or the sky goes black as you descend.
 
+- Cheaper far detail on a skim: cap full detail by distance from the
+  camera (here 800-1,200 km) and use a middle level beyond. Three traps:
+  - Cap detail, never coverage. If the planet's own surface is hidden
+    under the close cloud, a "draw nothing past here" cap leaves black.
+  - Grazing rays need the full trace at the middle level too, or the
+    horizon draws a hard edge where the cap hands over.
+  - Fewer light steps at the far level shift tone and shadows; keep the
+    full light steps and cut march steps instead.
+  Raise the middle level's steps one rung at a time against the full march
+  to buy back the horizon detail, and time each rung on the real camera
+  path, not only in a lab framing (Jupiter, Nov 2026).
+
 ## Motion
 
 - Cloud fields need a slow clock. At the speed that looks fine from orbit,

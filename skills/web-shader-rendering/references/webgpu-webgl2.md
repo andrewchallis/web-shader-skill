@@ -191,6 +191,11 @@ testing, community/bug-report links and the historical section.
   first-load stalls. Precompile (draw hidden before showing) and reuse a
   small set of shader families.
 - Timestamp queries need the feature; report "unsupported", not zero.
+- three.js `resolveTimestampsAsync` (r186) returns the GPU time of the
+  newest frame it resolved, not a total since the last resolve. Don't
+  divide it by the frames in between: that read 2-3x low on a slow scene.
+  When frame time is far above the GPU readout, take a Chrome trace: a
+  `Queue::Submit` blocking most of the frame means the GPU is the limit.
 - One bloom or post node per scene pipeline multiplies passes; share them.
 
 ## Precision

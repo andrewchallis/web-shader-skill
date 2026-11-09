@@ -2,8 +2,7 @@
 ## WeebLabs Nightscape (Three.js r128, WebGL2)
 
 [Nightscape](https://github.com/WeebLabs/Nightscape), a night flight over a
-moonlit cloud sea in one `index.html`. **No licence file**, so treat it as
-all rights reserved: ideas only, don't copy code. Its README section "How it
+moonlit cloud sea in one `index.html`. MIT licence (its LICENSE file, checked 9 Nov 2026; an earlier copy had none, so older notes said ideas only). Port its code with the MIT notice and a credit line. Its README section "How it
 renders" is the best short write-up we've found on keeping ray-marched
 clouds still while the camera moves.
 
@@ -36,6 +35,39 @@ Take from it:
 - Lighting: Beer-Lambert, dual-lobe Henyey-Greenstein, three-octave
   multiple scattering, powder, height- and occlusion-weighted ambient,
   haze thinning with height.
+
+What the code actually does (read 9 Nov 2026, `index.html`), for a port:
+
+- **Shapes are a true 3D SDF, not a height field.** `sceneSD` smooth-max
+  unions three parts: a deck (top and base heights from Perlin, opened by a
+  coverage field), cumulus heaps (one per grid cell, six rounded "thermal
+  bubbles" each, big and spread at the base, smaller and higher up, pushed
+  downwind, joined by smooth max) and cumulonimbus (column, wind-dragged
+  anvil, overshooting dome). Billow and lobe noise are added to the SDF, so
+  bumps are round in 3D. A carved height field can't make overhangs or
+  stacked turrets, which is a big part of why it looks less like cloud.
+- **Noise texture:** one 64^3 RGBA8 tiling texture built on the CPU. R:
+  Perlin-Worley billow (0.6 inverted Worley at 4/8/16 + 0.4 Perlin fBm),
+  G: detail Worley (8/16/32), B: smooth Perlin fBm. Each channel is
+  stretched to its 0.5-99.5% range. Billow samples it twice, the second
+  with an integer "rotation" `(2x+z, 2y, 2z-x)` so it still tiles.
+- **Bake:** a 256 x 96 x 256 texture over the 320-unit tile, written as 2D
+  slices (8 x 12 atlas). R: light OD toward the moon, a march of up to 150
+  growing steps (0.12 up to 3 units, ~300 units) with `exp(-t*0.02)` so far
+  shadow fills in, stored as `1-exp(-od*0.25)`. G: OD straight up (14
+  steps), stored as `1-exp(-up*0.4)`. B: the SDF itself, `(sd+10)/16`.
+- **Render shape:** `shapeSD = bakedSD + (one live billow octave - 0.5) *
+  0.9`, and only within 1.2 units of cloud. Further out the baked value is
+  the skip bound.
+- **Light per sample:** two crisp live samples (0.15 and 0.45 units toward
+  the light) plus the bake read at 0.6. Beyond 55-80 units only the bake.
+- **Density:** `clamp((sd + 0.14 - erosion) * ramp)`, erosion from the
+  detail Worley fading out by 100-170 units, `ramp = 2 / max(1, 0.048*t)`.
+- **Planes:** spacing `0.06 * 2^band`; the refined grid near a surface is
+  half the band spacing (2x finer).
+- It is a flat, tiled world. On a planet, bake in a local frame (tangent
+  plane or lat/lon with height above the sphere) over only the area the
+  camera can reach.
 
 ## Orbit to close Earth views: 3dsolarsystem.online
 

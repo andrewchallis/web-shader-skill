@@ -10,6 +10,7 @@ in our cloud and gas work.
 | Gravel, grain, hairs, fuzz, cotton wool | Octaves finer than a few pixels on screen | Fade octaves by pixel footprint; make close-in detail several times bigger |
 | Fish scales, leopard spots, regular rows | One noise octave dominating, cells all one size, or shading from cells that aren't resolved | Mix sizes, rotate octaves against each other, fade shading with relief |
 | Flat facets on slopes | Finite differences of a trilinear-filtered baked texture (piecewise linear) | Analytic derivatives of computed noise, or central difference across a whole puff |
+| Blotches, cells or stacked sheets inside the cloud; edges glow | Long camera-relative steps through sharp-edged cloud (each step draws as a slice rim), and cellular noise borders read as cell walls | Finer, world-anchored steps near surfaces with edges that widen with distance; Perlin-Worley billows added to a 3D SDF instead of cellular carve noise (see Nightscape in prior-art.md) |
 | Painted sand ripples | Smooth fractal noise used as shading with no real height | Real height or drop it |
 | Vertical streaks at a low Sun | Tall straight-sided height-field columns (towers) | Rounded billows that vary up the walls, or lower relief |
 | Smears along one axis | Noise stretched too far along a band, viewed along it | Stretch near 1 to 1.5 |

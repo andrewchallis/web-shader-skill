@@ -176,3 +176,76 @@ Take from it:
   skill already uses; nothing new there.
 - Its fixed 80-step march with 6 light steps is a demo budget, not a
   guide for planet scales.
+
+## gokayfem shader-skills (MIT, GLSL)
+
+[shader-skills](https://github.com/gokayfem/shader-skills) (checked at
+`a56e773`, Oct 2026, MIT) is an agent skill for Shadertoy-style GLSL: 186
+functions in 20 modules (SDFs, noise, volume, atmosphere, colour, tonemap,
+debug), a bundler, a checker and 11 example shaders including volumetric
+cumulus. Every function is an original implementation of a published
+technique, listed with its source in `CREDITS.md`, and checked on the GPU
+(SDF bounds, noise derivatives against finite differences, curl noise for
+zero divergence). Shadertoy GLSL, not TSL, so port what you use.
+
+Take from it:
+
+- **`volumeStep`**: the energy-conserving step (Hillaire): per step,
+  `T_step = exp(-sigmaT * ds)`, add `T * (S - S * T_step) / sigmaT`, then
+  `T *= T_step`. Stable in dense media at 30 to 60 steps where
+  `radiance += T * S * ds` over-brightens and leaks light. Copied in
+  [sources/gokayfem-volume.glsl](../sources/gokayfem-volume.glsl) with its
+  phase functions and Beer-powder.
+- **Phase in artist units**: multiply HG phase by 4 pi so isotropic is 1
+  and the Sun term is on the same scale as the ambient colour; without it
+  the ambient wins and clouds look flat.
+- **One debug-mode numbering for every shader** (0 final, 1 distance
+  field, 2 normals, 3 ids, 4 step count, 5 density or masks, 6 lighting
+  terms split into R, G, B), and the rule to inspect the broken field
+  directly rather than guess from the shaded frame. Worth copying as
+  query flags in a lab harness.
+- Also in its library: blackbody colour (Krystek fit), Sun limb darkening
+  (Neckel 1996 constants), PCG hashes instead of sine hashes (which differ
+  per GPU), interleaved gradient noise for jitter, AgX tone mapping.
+
+## three-good-godrays (zlib, WebGL)
+
+[three-good-godrays](https://github.com/Ameobea/three-good-godrays)
+(checked at `2d15ba9`, Nov 2026, zlib-style licence keeping the credit to
+N8python's original) is a screen-space god ray pass for Three.js on the
+pmndrs `postprocessing` library, WebGL only.
+
+Take from it:
+
+- Rays are marched in screen space from each pixel towards the light,
+  testing each sample against the light's **shadow map** to find lit air:
+  real occlusion from scene geometry, not a radial blur of bright pixels.
+  It needs shadow maps on, which a space scene usually doesn't have, so
+  for a star behind a planet or ring the occluder test has to come from
+  another source (an analytic sphere or ring intersection is cheaper).
+- The march runs at reduced resolution, then a **bilateral blur** and a
+  **joint bilateral upsample** against full-resolution depth put it back
+  without halos at edges. The same two passes suit any half-resolution
+  volume (clouds, haze) that has to sit cleanly against sharp geometry.
+
+## PWhiddy Fat-Clouds (no licence, CUDA)
+
+[Fat-Clouds](https://github.com/PWhiddy/Fat-Clouds) (2018) is a small 3D
+fluid simulator and volumetric renderer in about 600 lines of CUDA.
+**No licence file**: ideas only, don't copy code. Not usable in a browser
+as is.
+
+Take from it:
+
+- The full stable-fluids loop on a 3D grid: advect velocity, density and
+  temperature; add buoyancy from temperature minus ambient and weight from
+  density; compute divergence; Jacobi pressure solve; subtract the
+  pressure gradient. Each step is a compute kernel, so it maps onto WebGPU
+  compute passes and 3D storage textures. Small dissipation per field
+  (0.998 for density, 0.9999 for temperature) keeps it alive for long runs.
+- Its renderer is the plain baseline: up to 512 steps per pixel with a
+  light-occlusion march at every step. Fine for offline frames, far too
+  costly live; bake the light or use a shadow volume.
+- Use: a short simulated puff or plume (a stellar wind burst, a storm
+  outflow) baked into a 3D texture and played back, rather than noise
+  pretending to move like a fluid.

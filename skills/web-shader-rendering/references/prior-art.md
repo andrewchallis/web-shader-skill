@@ -249,3 +249,29 @@ Take from it:
 - Use: a short simulated puff or plume (a stellar wind burst, a storm
   outflow) baked into a 3D texture and played back, rather than noise
   pretending to move like a fluid.
+
+## shader-effects-inc shaders (MIT, WebGPU)
+
+[shaders](https://github.com/shader-effects-inc/shaders) (checked at
+`1f71d11`, Nov 2026, MIT for the engine, components and bindings; the
+presets and editor at shaders.com have their own terms) is a library of
+200+ 2D screen effects for websites (gradients, glass, blurs, lens and
+light effects), written as WGSL through TypeGPU, not Three.js or TSL. Most
+of it is web-design decoration; a few parts match camera effects.
+
+Take from it:
+
+- **Lens and light generators** as small pure functions: falloffs, lobes
+  and bands behind SunBurst, Godrays, LensFlare (seven ghost layouts kept
+  as a config table, not shader code) and a spectral lens (barrel or
+  pincushion bulge plus a colour fan gathered over a runtime-count loop).
+  See `packages/core/src/gpu/kit/lightfields.ts` and `lensParts.ts`; port
+  the maths to TSL if a lens ghost, fringe or glare look needs rework.
+- **One gather for all motion blurs**: linear, orbit and zoom blur are the
+  same 32-tap Gaussian gather with only the tap path swapped
+  (`motionBlur.ts`). Taps run in premultiplied colour.
+- **A primitives catalog with a rule**: check the catalog
+  (`gpu/kit/CATALOG.md`) before writing inline maths, and treat a
+  hand-rolled copy as a review defect, so a fix made once reaches every
+  shader. Pure float helpers also get CPU golden-value tests. Both habits
+  suit any project with many similar shaders.

@@ -2,8 +2,7 @@
 ## WeebLabs Nightscape (Three.js r128, WebGL2)
 
 [Nightscape](https://github.com/WeebLabs/Nightscape), a night flight over a
-moonlit cloud sea in one `index.html`. **No licence file**, so treat it as
-all rights reserved: ideas only, don't copy code. Its README section "How it
+moonlit cloud sea in one `index.html`. MIT licence (its LICENSE file, checked 9 Nov 2026; an earlier copy had none, so older notes said ideas only). Port its code with the MIT notice and a credit line. Its README section "How it
 renders" is the best short write-up we've found on keeping ray-marched
 clouds still while the camera moves.
 

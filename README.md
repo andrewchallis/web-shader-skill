@@ -34,6 +34,12 @@ Or copy `skills/web-shader-rendering/` into a project's `.claude/skills/`.
 - `references/prior-art.md`: open-source cloud renderers worth studying.
 - `sources/`: original shader code whose licence allows sharing.
 
+## Updates
+
+A workflow raises the patch version in `.claude-plugin/` after every merge
+to main, so installed copies see a new version and update. Don't bump it by
+hand in PRs.
+
 ## Licence
 
 The skill's own text is MIT. Files in `sources/` keep their authors'

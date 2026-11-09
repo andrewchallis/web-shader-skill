@@ -1,0 +1,43 @@
+# Raises the plugin's patch version after every change to main, so installs
+# that only update when the version changes (Claude Code and claude.ai
+# plugin marketplaces) pick up new skill text. Pushes made with GITHUB_TOKEN
+# don't start workflows, so this never triggers itself.
+name: Bump plugin version
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+concurrency:
+  group: bump-version
+  cancel-in-progress: false
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Raise patch version in plugin.json and marketplace.json
+        run: |
+          node -e '
+            const fs = require("fs");
+            const pluginPath = ".claude-plugin/plugin.json";
+            const marketPath = ".claude-plugin/marketplace.json";
+            const plugin = JSON.parse(fs.readFileSync(pluginPath, "utf8"));
+            const [a, b, c] = plugin.version.split(".").map(Number);
+            const next = `${a}.${b}.${c + 1}`;
+            plugin.version = next;
+            fs.writeFileSync(pluginPath, JSON.stringify(plugin, null, 2) + "\n");
+            const market = JSON.parse(fs.readFileSync(marketPath, "utf8"));
+            market.metadata.version = next;
+            for (const p of market.plugins) if (p.name === plugin.name) p.version = next;
+            fs.writeFileSync(marketPath, JSON.stringify(market, null, 2) + "\n");
+            console.log("version", next);
+          '
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .claude-plugin
+          git diff --cached --quiet && exit 0
+          git commit -m "Bump plugin version to $(node -p 'require("./.claude-plugin/plugin.json").version')"
+          git push

@@ -95,11 +95,14 @@ budget may beat rule 3.
   like, its cause and the fix. Read this first when debugging a look.
 - [references/webgpu-webgl2.md](references/webgpu-webgl2.md): TSL and
   backend gotchas, WebGL2 limits, precision, pipeline count, software
-  renderer traps.
+  renderer traps, and every useful awesome-webgpu link grouped by use
+  (debug and profile, performance, learning, tooling, demos).
 - [references/prior-art.md](references/prior-art.md): full open-source
-  cloud renderers (Nightscape, joshbrew WebGPU noise and clouds, CK42BB
-  procedural clouds) and an orbit-to-ground globe, and what to take from
-  each. Read before designing a new cloud renderer.
+  cloud renderers (Nightscape, takram three-clouds, joshbrew WebGPU noise
+  and clouds, CK42BB procedural clouds), CK42BB starfield, weather and
+  landscape skills, gokayfem shader-skills, good godrays, the Fat-Clouds
+  fluid sim, the shaders.com lens and blur kit and an orbit-to-ground
+  globe, and what to take from each. Read before designing a new cloud renderer.
 - [sources/](sources/README.md): original shader code we were given, with
   licences and where each one is ported.
 

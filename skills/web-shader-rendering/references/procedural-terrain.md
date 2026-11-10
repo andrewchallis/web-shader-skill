@@ -263,6 +263,9 @@ viewer zoom down to 12 km (Nov 2026, lab, desktop RTX 4070, WebGPU).
   with the same layers, views and sun in one run. Matching results put the
   fault in the ground shader, not in how the layers combine. Include a
   view over open sea, not only land: one bad longitude can hide on land.
+Zoom and tilt below are the design as written, checked only in a unit
+simulation so far, not yet in motion on the desktop:
+
 - **Zoom in log steps of height, not of distance from the centre.** Near a
   globe, steps in centre distance barely move at 20 km. Steps in height
   above the surface move as far at 20 km as at 2,000 km.

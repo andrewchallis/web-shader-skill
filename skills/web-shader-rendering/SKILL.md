@@ -83,6 +83,10 @@ budget may beat rule 3.
   a source-inspected Earth example of streamed cloud maps, stable cloud-top
   detail and a globe-to-volume transition. Read when a camera must descend
   from orbit into clouds; its distances and budgets are examples, not defaults.
+- [references/procedural-terrain.md](references/procedural-terrain.md):
+  procedural ground on a globe guided by a height map: lift and light
+  from one height function, lighting relief without grain or dashes,
+  baked noise, planet-fixed noise, ground fog. Read before terrain work.
 - [references/cloud-types.md](references/cloud-types.md): settings and
   looks for the ten Earth cloud types, and how they carry over to gas
   giant decks and haze.

@@ -196,7 +196,8 @@ Haze and fog:
   cumulus. **Flat fog tops and hard patch edges** read as cloud decks or
   snowfields.
 - **The lab's near plane at 5% of height** clipped the air shell at 178 km
-  and drew a straight seam: a lab bug, not the shader.
+  and drew a straight seam: a lab bug, not the shader. Fixing it moved a
+  smaller haze jump to between 180 and 120 km, still open.
 
 City lights (OSM, ten rounds over Milan):
 - **NASA value as the brightness** close up: the whole Po valley glowed
@@ -214,7 +215,9 @@ City lights (OSM, ten rounds over Milan):
   fog, softened.
 - **Three separate light maps** pushed the Earth shader to 18 textures,
   over WebGPU's 16. One atlas fixed it.
-- **The first cloud glow from below** was too faint to read.
+- **The first cloud glow from below** was too faint to read, and the NASA
+  map's coarse blur under cloud was a flat wash. Stills from 15 km showed
+  no glow at all: the camera was under a front-side-only cloud shell.
 
 Sea:
 - **Cloud cover cutting the sky reflection** as well as the glint: hard

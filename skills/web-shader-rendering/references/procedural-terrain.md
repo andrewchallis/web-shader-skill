@@ -147,6 +147,99 @@ down to 5 km over open sea.
   hard flat tops read as cloud decks or snowfields.
 - A thin veil with wisps over high snow is subtle; judge it side by side.
 
+## Tried and didn't work
+
+Kept as a record so the next attempt doesn't repeat them. Each line is what
+was tried, what it did, and what replaced it.
+
+Ground relief and lighting:
+- **Roughness from height alone** crumpled plateaus and high deserts like
+  paper (Grand Canyon rim, Atacama) and lost the canyon. Replaced by local
+  relief (`|height - blurred height|`).
+- **Live MaterialX noise** for every octave: about 2x the ground's cost and
+  a 12 s shader build. Replaced by a baked 64^3 Perlin texture (1.8 s).
+- **One bilinear tap of the height guide** far out lit each 1.2 km texel as
+  a flat facet. **B-spline near the camera only** left far snow blocky.
+  Fixed by keeping the B-spline until a texel is about one pixel.
+- **Noise on the mesh position** crawled across the land as the globe
+  turned (the globe spins by sliding its map coordinate).
+- **Screen-slope normal on patch skirts** drew thin dark dashes along
+  ridges; skirts need the mesh normal.
+- **Lighting from the screen slope of the whole height** drew thin dark
+  dashes on near snow, along the baked noise's trilinear creases.
+- **Smoothstep inside each noise texel** to hide those creases put a flat
+  spot in every texel: fine diagonal hatching. Smoothing only texels larger
+  than a pixel still added a texel-sized ripple. Plain trilinear won once
+  only well-sampled octaves were lit per pixel.
+- **Mesh normal from 2.5-cell octaves:** each vertex's one-cell difference
+  caught a different phase of the finest waves and grained the shading.
+  Needs octaves of about 6 cells a wave or more.
+- **Per-pixel lit detail at 2.5, 6 and 12 pixels a wave** all stepped or
+  grained on bright snow. Only 20 px a wave, faded by the slanted pixel's
+  long side, was clean (and cheapest).
+- **Fine derivatives (`dpdxFine`)** for the 2-pixel stepping on near snow
+  changed nothing. The cause was the slanted footprint, not coarse
+  derivatives.
+- **The `1e-10` area clamp** in the screen-slope normal flattened all
+  relief closer than ~60 m a pixel. It looked smooth but hid the aliasing;
+  removing it exposed the real problem.
+- **Rock and snow slope from screen derivatives:** 2x2 speckle. From the
+  mesh normal with all octaves: clean but about 1 ms more at Everest, so
+  only coarse octaves (10+ cells) and only near.
+- **Wobbling only the 32K map coordinate** to hide the texel grid missed far
+  snow, which came from the 8K map. Both maps need it.
+
+Haze and fog:
+- **The orbit view's haze close up** turned shaded valleys blue, like
+  water. Replaced by haze by the air crossed, and skylight in shadows.
+- **Valley fog with no ground-type gate** filled the Grand Canyon like
+  cumulus. **Flat fog tops and hard patch edges** read as cloud decks or
+  snowfields.
+- **The lab's near plane at 5% of height** clipped the air shell at 178 km
+  and drew a straight seam: a lab bug, not the shader.
+
+City lights (OSM, ten rounds over Milan):
+- **NASA value as the brightness** close up: the whole Po valley glowed
+  cream (the map saturates).
+- **Fields away from roads getting the cell's light back:** brown blotches.
+  **Town, industrial and rail land drawn as fills:** flat map polygons.
+- **Light from the cell average along roads:** lone rural roads as bright as
+  Milan. Brightness needs street density.
+- **Too dim overall** read as a dim web; centres need a glow mass.
+- **Glow from street density** lay over farmland in blotches. **A blurred
+  built-up mask** smeared off towns; overlapping district outlines doubled
+  it. **A sharp built-up mask** drew crisp polygons as bright as the roads.
+  Kept: ~150 m soft mask, scaled by density, under the roads.
+- **Lights under the valley fog** vanished in skim views; they add after
+  fog, softened.
+- **Three separate light maps** pushed the Earth shader to 18 textures,
+  over WebGPU's 16. One atlas fixed it.
+- **The first cloud glow from below** was too faint to read.
+
+Sea:
+- **Cloud cover cutting the sky reflection** as well as the glint: hard
+  black blotches on open sea.
+- **A short per-octave fade:** waves dropped out in rings straight down.
+- **Fading harder against the rings round the camera** had no effect. The
+  cause was isotropic waves; stretched crests fixed it. A per-octave axis
+  shuffle was tried as a suspect and wasn't needed.
+- **Sparkles as one fixed fine field:** evenly scattered white specks, like
+  dust. **8 m facets at x6:** one faint pixel at 5 km, lost against the
+  glint. **A lobe of 0.3, then 2.2x roughness at x24:** sparkles spread over
+  the whole sea, lit far from the sun, still dust.
+- **Fading far waves by the slanted footprint** (as for terrain) removed the
+  far static but blurred the near waves; a gentler slant fade still did.
+- **A distance fade from 3 to 7 times the height** (15 to 35 km minimum)
+  left a visible line where the waves ended. 2 to 10 times (10 to 50 km)
+  hid it.
+
+Test setup:
+- A lab "Alps by day" view was at night, and at 5 km the camera sat inside
+  the mountains, which tore the frame. Check sun side and ground height
+  before reading a still as a bug.
+- A loading check waited for the app to pause, but that stop auto-plays:
+  it looked like a hang on main too.
+
 ## Workflow that saved time
 
 - An A/B look per suspect in one page load (same views, several looks)

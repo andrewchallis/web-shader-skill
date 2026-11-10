@@ -86,7 +86,9 @@ budget may beat rule 3.
 - [references/procedural-terrain.md](references/procedural-terrain.md):
   procedural ground on a globe guided by a height map: lift and light
   from one height function, lighting relief without grain or dashes,
-  baked noise, planet-fixed noise, ground fog. Read before terrain work.
+  baked noise, planet-fixed noise, ground fog, a close-up sea (waves,
+  sparkles, distance fade), street-level city lights. Read before terrain
+  or sea work.
 - [references/cloud-types.md](references/cloud-types.md): settings and
   looks for the ten Earth cloud types, and how they carry over to gas
   giant decks and haze.

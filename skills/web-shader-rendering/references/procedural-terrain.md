@@ -73,6 +73,69 @@ screen slope of only the detail finer than the mesh.**
 - A soft water mask makes the sea's glint shine on land near coasts. Gate
   glint to open sea (`smoothstep(0.6, 0.95, water)`).
 
+## Sea close up
+
+Lessons from 13 more rounds on the same globe, camera from about 60 km
+down to 5 km over open sea.
+
+- **Waves hand their slope to the glint's roughness.** A few octaves of the
+  same baked, planet-fixed noise (600, 250, 100 and 40 m) tilt the normal
+  while each spans a few pixels. As an octave shrinks below that, its slope
+  variance moves into the GGX roughness instead (keep the total near a
+  wind-roughened sea, about 0.04). So the glint breaks into glitter close
+  up and stays one smooth patch far off, at the same overall size.
+- **Use a long fade per octave** (`1 - smoothstep(0.15, 0.6, foot / l)`).
+  A short one dropped octaves out in rings round the point below the
+  camera.
+- **Isotropic waves line up into arcs round the camera** once the sky's
+  reflection is added: the reflection picks out the slope along each line
+  of sight. Stretch the crests (read noise with one axis divided by 2) so
+  the sea has a wind direction. Fading the rings harder did nothing; the
+  arcs came from the waves being isotropic.
+- **Make the waves move by layer, not as one sheet.** Drift each octave
+  downwind at deep water's speed for its wavelength, `sqrt(g l / 2 pi)`
+  (swell ~30 m/s, short chop ~8 m/s), so the pattern changes as it goes.
+- **Sun sparkles** are the peaks of a fine noise (about 15 m) lit by a lobe
+  wider than the sea's roughness. Lessons:
+  - Multiply two fine fields drifting opposite ways, so each facet lives a
+    moment and goes. One fixed field read as white dust.
+  - Widen the lobe only a little (alpha x1.6) and cut its tail
+    (`lobe * smoothstep(0.08, 0.4, lobe)`). A wide lobe spread them evenly
+    over the whole sea, again like dust.
+  - Fade them out below about a pixel and let them clip to white, so the
+    app's bloom can star them.
+- **Far waves turn to static.** Fade waves and sparkles off by distance from
+  2 to 10 times the camera's height (no nearer than 10 to 50 km); past that
+  the sea is a smooth sky mirror with the glint's roughness. A narrower band
+  (3 to 7 times) left a visible line. Fading by the slanted pixel's
+  footprint, which worked for terrain, blurred the near waves too.
+- The sky's reflection belongs on all open sea; hide only the sun's glint
+  under cloud. Cutting both by cloud cover left hard black blotches.
+- Pale and bright sky near the horizon, deeper blue overhead, picked by the
+  reflected ray's height, reads as water from high up.
+
+## City lights at street level
+
+- The global night map stays the truth for how bright a place is; street
+  data only says where inside each ~1 km cell the light lies. Use the night
+  map as a weight, `pow(r, 1.5)`: it saturates over dense regions.
+- Streaming vector road tiles (OpenFreeMap, no key) at zooms 12, 10 and 8
+  into **one** canvas atlas kept the Earth shader under WebGPU's 16-texture
+  limit. Three separate maps came to 18. Fade each region near its edge so
+  mip bleed between regions doesn't show.
+- Light = roads times street density, plus a soft (~150 m) glow over
+  built-up areas. Draw minor streets dashed, as lamps. Landuse fills drawn
+  as light looked like painted blocks; overlapping place polygons
+  (quarter, suburb) double-counted. Add lights after fog.
+- Credit OpenStreetMap (ODbL) wherever the streamed lights ship.
+
+## Cloud lit from below
+
+- At night, light the cloud's underside from the city lights under it: a
+  blurred mip of the light map, `pow(below, 1.5)` for the gentler curve.
+  Check where the cloud shell is front-side only: then the glow is seen
+  from above only, and a camera under the deck sees nothing.
+
 ## Ground fog
 
 - Fog lies where the ground is below its own ~10 km average, in patches

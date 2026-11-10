@@ -36,4 +36,8 @@ in our cloud and gas work.
 | Fine diagonal hatching on lit terrain | Smoothstep inside each texel of a baked noise texture (flat spots per texel) | Plain trilinear, and light per pixel only well-sampled octaves |
 | Near relief "smooth" but suddenly busy when a constant changes | Area clamp in the screen-slope normal flattening close relief | Clamp far below the pixel area at the closest view |
 | Valley fog fills deserts and canyons like cumulus | Fog from depth below average ground only | Gate by ground type from the map colour; thickness over the view's slant; wavy tops |
+| Sea waves form arcs or rings round the camera | Isotropic wave noise; the sky reflection picks out slope along each line of sight | Stretch the crests along one axis (wind direction); long per-octave fade by pixel size (procedural-terrain.md) |
+| Far sea turns to noise or static | Waves and sparkles still drawn where they're under a pixel | Fade them off from about 2 to 10 times the camera height; leave the far sea to the glint's roughness |
+| Sun sparkles look like white dust over the sea | Fixed sparkle field, or a lobe much wider than the roughness | Two opposite-drifting fields multiplied; lobe ~1.6x roughness with its tail cut |
+| Hard black blotches on the sea under cloud | Cloud cover cutting the sky reflection as well as the glint | Hide only the sun's glint under cloud |
 | Change "did nothing" | Wrong layer is the one drawing at that height, or a guard hid it | Tint layers flat colours to see which one draws |

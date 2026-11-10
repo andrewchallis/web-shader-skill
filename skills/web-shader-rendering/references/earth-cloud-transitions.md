@@ -154,3 +154,46 @@ cuts; do not keep accumulating through disocclusions or a changed field.
   Inspect temporal ghosting after cuts and cloud motion.
 - Measure cost on the target GPU with isolated timing. Source settings and
   still frames do not establish stable motion or performance.
+
+## Close cumulus heaps and the march: what worked, what didn't
+
+From a polish pass on Earth's close clouds (a port of Nightscape's baked
+heap field and march, 13 rounds, Nov 2026). Camera at 20, 8 and 3 km,
+looking down and skimming the horizon, desktop RTX 4070, WebGPU.
+
+What worked:
+- **Broader, lumpier heaps.** Towers read as single balls until the
+  bubbles that build a heap blended more softly (smooth-max k about 0.8 of
+  the bubble radius, up from 0.45), joined the deck more softly (about 2x
+  the old blend), sat further apart (offset about 1.3 radii, up from 0.75)
+  and had stronger lobes. They now read as merged cumulus heaps.
+- **Deck a little lower** (0.4 km) so the down view from 8 km clears it
+  instead of sitting in its top.
+- **No view-aligned planes for a thin deck.** The march's camera-facing
+  sample planes, which suit thick gas, cut a deck a few hundred metres thick
+  into a blocky striped patch at 20 km and streaks at 3 km. Plain steps
+  that grow with distance (`dt = t * 0.005 + 0.025` in deck units, 1,200
+  steps max) draw neither, and cost less: lab GPU ms fell in every view
+  (3 km skim 6.3 to 4.4 ms).
+- **Billow octave faded sooner** (100 to 250 units) cut grain on the far
+  deck.
+- **Timing method.** Run main twice and the branch once on a quiet GPU in
+  one turn. The two main runs set the noise (0.06 ms or less here), so a
+  gap bigger than that is real.
+
+What didn't work:
+- **Bake changes for the patch and streaks.** A wider bake window, 512
+  instead of 256 texels, 54 instead of 36 layers, and more steps changed
+  nothing. Neither did smoothing inside each noise octave, which cost 55%
+  more. When bake resolution doesn't move an artefact, it's the march.
+- **No planes with the old, coarser plain step** (`t * 0.016 + 0.08`).
+  The patch went, but contour bands appeared on every heap. Steps three
+  times finer removed most of them.
+- **Finer steps alone don't remove every band.** Faint contour rings stay
+  on some heaps at 20 km skim, thin wisps and hole rims show a comb fringe,
+  and fading the billow octave early makes the mid-distance deck look a
+  little airbrushed. Untested next step: jitter the march start per pixel
+  by part of a step (fixed in world space, not per frame) and check it in
+  motion.
+- **Faint streaks remain** where the deck breaks up over the sea, looking
+  straight down from 3 km.

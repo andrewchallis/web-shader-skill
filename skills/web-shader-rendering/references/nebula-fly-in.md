@@ -1,6 +1,6 @@
 # Flying into a nebula
 
-Lessons from 15 desktop rounds on one ray-marched emission nebula that the
+Lessons from 16 desktop rounds on one ray-marched emission nebula that the
 camera flies into, from five cloud radii out to a resting point near the
 centre. The target was a filmic, documentary look. The base shader is a
 spiral-noise density march of the Duke / Helix Nebula family (a distance-like

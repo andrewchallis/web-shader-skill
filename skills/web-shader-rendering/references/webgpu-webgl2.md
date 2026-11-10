@@ -197,6 +197,10 @@ testing, community/bug-report links and the historical section.
   When frame time is far above the GPU readout, take a Chrome trace: a
   `Queue::Submit` blocking most of the frame means the GPU is the limit.
 - One bloom or post node per scene pipeline multiplies passes; share them.
+- three's `dFdx`/`dFdy` emit WGSL `dpdx`/`dpdy`, which Chrome may run
+  coarse (one value per 2x2 quad). For per-pixel slopes, a small TempNode
+  can emit `dpdxFine`/`dpdyFine` on WebGPU and `dFdx` on WebGL2 (check
+  `builder.renderer.backend.isWebGPUBackend`).
 
 ## Precision
 

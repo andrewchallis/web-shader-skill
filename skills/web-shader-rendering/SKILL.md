@@ -89,6 +89,11 @@ budget may beat rule 3.
   baked noise, planet-fixed noise, ground fog, a close-up sea (waves,
   sparkles, distance fade), street-level city lights. Read before terrain
   or sea work.
+- [references/gas-giant-clouds.md](references/gas-giant-clouds.md): the
+  full Jupiter record (about 200 rounds, five approaches): what worked,
+  what didn't, planet-scale traps, open issues, and a checklist for
+  Saturn, the ice giants or any cloud seen from orbit down to a skim. Read
+  before starting cloud work on a planet.
 - [references/cloud-types.md](references/cloud-types.md): settings and
   looks for the ten Earth cloud types, and how they carry over to gas
   giant decks and haze.

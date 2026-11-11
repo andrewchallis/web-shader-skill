@@ -94,6 +94,8 @@ budget may beat rule 3.
   what didn't, planet-scale traps, open issues, and a checklist for
   Saturn, the ice giants or any cloud seen from orbit down to a skim. Read
   before starting cloud work on a planet.
+- [references/gas-giant-snippets.md](references/gas-giant-snippets.md):
+  short TSL code for the Jupiter pieces that took the most rounds.
 - [references/cloud-types.md](references/cloud-types.md): settings and
   looks for the ten Earth cloud types, and how they carry over to gas
   giant decks and haze.

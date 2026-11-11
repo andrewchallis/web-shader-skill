@@ -28,6 +28,7 @@ Or copy `skills/web-shader-rendering/` into a project's `.claude/skills/`.
 - `references/earth-cloud-transitions.md`: shared cloud fields and the
   globe-to-volume transition.
 - `references/gas-giant-clouds.md`: the Jupiter record: what worked and what didn't, orbit to skim.
+- `references/gas-giant-snippets.md`: TSL snippets for the key Jupiter pieces.
 - `references/cloud-types.md`: the ten Earth cloud types (from CK42BB, MIT) and gas giant overlap.
 - `references/ray-marching.md`: shells, grazing rays, density, light, cost.
 - `references/symptoms.md`: bad frame, cause, fix.

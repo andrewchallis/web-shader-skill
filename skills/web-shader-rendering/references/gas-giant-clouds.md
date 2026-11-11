@@ -6,6 +6,10 @@ what didn't and what is still open. Read it before doing cloud work on
 Saturn, the ice giants, or any cloud that has to hold up from a whole-planet
 view down to flying over it.
 
+Code for the key pieces (chart, strip bake, swap fade, B-spline read,
+bisected crossing, thin volume, storm, octave fade) is in
+[gas-giant-snippets.md](gas-giant-snippets.md).
+
 Numbers are from Jupiter (R = 71,492 km), a desktop RTX 4070 on WebGPU at
 1440x900, and Three.js r186-r187 node materials. Treat them as examples.
 

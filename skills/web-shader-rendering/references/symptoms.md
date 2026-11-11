@@ -40,4 +40,13 @@ in our cloud and gas work.
 | Far sea turns to noise or static | Waves and sparkles still drawn where they're under a pixel | Fade them off from about 2 to 10 times the camera height; leave the far sea to the glint's roughness |
 | Sun sparkles look like white dust over the sea | Fixed sparkle field, or a lobe much wider than the roughness | Two opposite-drifting fields multiplied; lobe ~1.6x roughness with its tail cut |
 | Hard black blotches on the sea under cloud | Cloud cover cutting the sky reflection as well as the glint | Hide only the sun's glint under cloud |
+| Far clumps look like rocks, mesas, pancakes or ice floes | An opaque height-field surface lit like ground: it can't thin out, let light in or glow at its edges | A thin volume after the first hit: a dozen samples over a short span from just before it, soft top and underside, over a separate deck ([gas-giant-clouds.md](gas-giant-clouds.md)) |
+| Horizontal stair-step ribs on steep cloud walls (a storm's eye wall) | The crossing taken from the coarse step; a wall steeper than one step jumps across it | Bisect the last coarse step a few times, then interpolate linearly |
+| A storm or swirl appears in one frame | A wide domain warp placed when the camera passes a height: every clump it touches changes at once | Fix it to the planet, set before the cloud shows |
+| Near-black gaps between bright near heaps; a hard join to the paler far band | Deep shaded cloud inside the haze-free zone, with too little light through the cloud | More multiple scattering and sky light, a higher sky-light floor in shade. Floor light doesn't help. |
+| Tall heaps pop in near the camera, or heap rims shift every few seconds | A baked window swapped without a fade, or re-baked a fraction of a texel off | Snap windows to the texel grid; fade a swap in over about 0.5 s |
+| Horizontal hatching on far cloud seen from high up | Bilinear reads of a coarse baked level crease at every texel | Cubic B-spline read from four filtered taps |
+| No cloud for seconds on a fast dive, or the dive stalls | Bakes paced for a slow camera, or every strip drawing the whole target | Fast pace for first and "urgent" bakes; check the scissor (webgpu-webgl2.md) |
+| Fading fine billows turns dots into regular ribs | The billows were hiding layered steps in the field under them | Fix the underlying steps; don't fade the billows to hide speckle |
+| A thin high cloud layer reads as flat decals or fly-through plates | A sheet has no depth; a thin volume seen edge-on at speed slices | Leave it out, or make it part of the main march's density |
 | Change "did nothing" | Wrong layer is the one drawing at that height, or a guard hid it | Tint layers flat colours to see which one draws |

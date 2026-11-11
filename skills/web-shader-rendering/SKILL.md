@@ -96,6 +96,10 @@ budget may beat rule 3.
   before starting cloud work on a planet.
 - [references/gas-giant-snippets.md](references/gas-giant-snippets.md):
   short TSL code for the Jupiter pieces that took the most rounds.
+- [references/air-composition.md](references/air-composition.md): one
+  atmosphere model, composed as scene x T + S exactly once; the traps that
+  draw a glow band at a planet's edge, and a zero-air control. Read before
+  atmosphere or haze work.
 - [references/cloud-types.md](references/cloud-types.md): settings and
   looks for the ten Earth cloud types, and how they carry over to gas
   giant decks and haze.

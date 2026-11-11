@@ -108,6 +108,11 @@ budget may beat rule 3.
   into an emission nebula: nested levels blended as one field, steady
   brightness, colour regions, smoke puffs in the march, twinkling stars,
   god rays from a star behind the gas, and what didn't work.
+- [references/sky-atmosphere-composition.md](references/sky-atmosphere-composition.md):
+  one air model for sky, edge glow and haze; composing air over a
+  surface once (surface x transmittance + scattered light); nothing
+  applied twice; the zero-atmosphere check. Read before adding any air,
+  haze or fog layer, or when an edge glow floats over the planet.
 - [references/symptoms.md](references/symptoms.md): what a bad frame looks
   like, its cause and the fix. Read this first when debugging a look.
 - [references/webgpu-webgl2.md](references/webgpu-webgl2.md): TSL and

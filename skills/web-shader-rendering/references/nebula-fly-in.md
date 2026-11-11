@@ -1,6 +1,6 @@
 # Flying into a nebula
 
-Lessons from 16 desktop rounds on one ray-marched emission nebula that the
+Lessons from 16 desktop rounds in the lab and about 20 more in the app on one ray-marched emission nebula that the
 camera flies into, from five cloud radii out to a resting point near the
 centre. The target was a filmic, documentary look. The base shader is a
 spiral-noise density march of the Duke / Helix Nebula family (a distance-like
@@ -184,6 +184,60 @@ What didn't:
   yourself and sample with screen UV, the star's screen position needs y
   flipped (`0.5 - 0.5 * ndc.y`) on both WebGPU and WebGL. Check that the
   rays radiate from the star's sprite before tuning anything else.
+
+## Moving it into the app
+
+The lab look then went into a documentary-style shot: the camera flies past
+a star, turns and travels into the cloud. These lessons came from that move.
+
+What worked:
+
+- **Steady rays.** In motion the rays flickered. Two causes: the source
+  star twinkled, and the coarse gas cut shifted a little each frame. Hold
+  the source star steady (no twinkle; the other stars can keep theirs) and
+  blend each frame's rays over the last few (we kept 15% new per frame).
+  Restart the blend in full on a cut, a seek, a long frame gap, a camera
+  jump or a fast turn, or the beams trail behind the star.
+- **Two fixed texture nodes for that history.** Two targets drawn in turn,
+  each reading the other through its own texture node. One node swapped
+  between the targets kept its first binding on WebGPU, so a target read
+  itself, which the GPU rejects: no beams at all. Read both with screen UV;
+  `uv()` flipped one of them on WebGL.
+- **A floor on the source star's glare** (about 0.12 of full), so the rays
+  never seem to come from an empty corner when the gas hides the star.
+  At 0.35 it read as a separate star.
+- **Rays from a quarter-size view.** Drawing the cloud alone at quarter
+  size for the ray pass looked the same as half size and cost about a
+  third (1.5 against 4.3 ms on a desktop RTX).
+- **Bigger cloud, same stars.** When asked to double the cloud keeping its
+  stars the same size, scale the cloud and pass the star cores a separate
+  scale, so they move apart without growing.
+- **Fog that builds near the resting point.** Dense, same-colour fog round
+  the centre that thickens as the camera gets close gives the last stretch
+  depth. Keep it very faint outside. It cost about 2 ms.
+- **Dim the background starfield on the way in** (we used half) and bring
+  it back once inside, or a bright starfield competes with the cloud.
+- **Ease the cloud in only once the camera has passed it.** The flight in
+  went by the cloud early, and at full strength it flashed as a pale,
+  hard-edged blob for 0.3 s. Easing it in while it sat behind the view
+  fixed that.
+- **Keep it drawn at a tiny strength (1e-4), not zero.** Hidden at zero,
+  its shaders and passes were first built mid-shot: a 1.5 s freeze. At a
+  tiny strength they build under the loading screen as before.
+
+What didn't:
+
+- **The full look on WebGL2.** On ANGLE over Direct3D, the nested march
+  never finished compiling (the page was still loading after 10 minutes).
+  WebGL got a much simpler procedural cloud instead. Time the WebGL2
+  compile in the lab before the app swap, and plan a lighter build per
+  backend from the start.
+- **Endpoint stills to judge the hand-overs.** The flash, the freeze and a
+  cut to another view on the way out only showed in motion: play the shot
+  through each hand-over, forward and seeking back.
+- **Stills taken just after loading.** The first still caught the loading
+  screen's drawing still fading over the cloud. Wait a few seconds after
+  loading ends before the first still.
 
 ## Process notes
 

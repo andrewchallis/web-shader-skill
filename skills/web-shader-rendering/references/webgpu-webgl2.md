@@ -201,6 +201,14 @@ testing, community/bug-report links and the historical section.
   coarse (one value per 2x2 quad). For per-pixel slopes, a small TempNode
   can emit `dpdxFine`/`dpdyFine` on WebGPU and `dFdx` on WebGL2 (check
   `builder.renderer.backend.isWebGPUBackend`).
+- WGSL error "structures must have at least one member" on
+  `struct OutputType` means a node material's fragment stage came out
+  with no outputs. Its pipeline is invalid, the command buffer it is
+  encoded in is rejected ("Invalid CommandBuffer ... due to a previous
+  error"), and every draw in that submit is lost. WebGL2 compiles the same
+  material without a word, so read the WebGPU console on every new layer.
+  Seen with Earth's close layers on (four MeshBasicNodeMaterials), not
+  with them off. The material behind it wasn't identified yet.
 
 ## Precision
 

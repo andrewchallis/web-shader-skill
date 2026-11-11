@@ -197,3 +197,11 @@ What didn't work:
   motion.
 - **Faint streaks remain** where the deck breaks up over the sea, looking
   straight down from 3 km.
+- **Tall vertical streaks at 3 km, one suspect per look.** At 3 km over
+  thick cover, skimming and looking down, five looks didn't bring the tall
+  streaks back in the lab: today's march, the old camera-facing planes,
+  no swell zones, lower towers and a taller bake. The old planes drew
+  grain and contour rings at the rims of holes in the deck, and today's
+  plain steps didn't, which fits the planes finding above. Lab stills at
+  these views don't show the tall streaks, so look for them in motion in
+  the app next.

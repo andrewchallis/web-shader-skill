@@ -263,8 +263,17 @@ viewer zoom down to 12 km (Nov 2026, lab, desktop RTX 4070, WebGPU).
   with the same layers, views and sun in one run. Matching results put the
   fault in the ground shader, not in how the layers combine. Include a
   view over open sea, not only land: one bad longitude can hide on land.
-Zoom and tilt below are the design as written, checked only in a unit
-simulation so far, not yet in motion on the desktop:
+- **Check that the ground puts places where the globe does.** When a lifted
+  ground takes over from the globe's texture, draw the same views with the
+  ground off and on (here 2,000 and 300 km looking down, over open sea and
+  over land). If coastlines and continents line up, the ground's
+  coordinates agree with the globe's. Here they lined up in all four pairs.
+  An earlier "land where the globe has sea" was a different view, not a
+  mismatch.
+
+Zoom and tilt below were designed in a unit simulation and then checked in
+the app on the desktop (WebGPU and WebGL, stills and a real-time wheel
+clip):
 
 - **Zoom in log steps of height, not of distance from the centre.** Near a
   globe, steps in centre distance barely move at 20 km. Steps in height
@@ -278,6 +287,25 @@ simulation so far, not yet in motion on the desktop:
   (about a quarter of the height, at most 1% of the distance), or the
   near ground and cloud get clipped. Set it the same way in the lab
   subject, or lab stills won't match the app.
+
+What the first app run showed (Explore over Earth, Nov 2026):
+
+- Log steps of height worked: one wheel step per still went 18,199, 6,695,
+  2,463, 906, 333, 123, 45, 17 and 12 km (the floor), each step about
+  2.7 times lower, and back up the same way.
+- **Check the night side too.** The run happened to arrive over night.
+  From 333 km down to the 12 km floor, every view was black in both
+  renderers: no city lights, no ground, no cloud. At 906 km the city
+  lights still showed. With the close layers off, the same steps drew the
+  globe, so the close layers are what goes dark. Day-side lab stills alone
+  wouldn't have caught this. Cause not found yet.
+- **Bound the wheel climb.** A real-time climb from the floor with steady
+  wheel turns went past the planet's own zoom range, and the app flew out
+  to the whole-solar-system view. If climbing out shouldn't leave the
+  planet, stop at its top zoom.
+- A camera-height readout taken from a scene's sound sources came back
+  empty in Explore. Read height from the camera and the planet's radius,
+  or from the on-screen distance.
 
 ## Workflow that saved time
 

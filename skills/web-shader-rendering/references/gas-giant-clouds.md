@@ -104,6 +104,20 @@ past "pebbles", "popcorn" or hairy tufts. The first faithful port of a real
 - **Light the far tops like the march lights its tops**, with the same
   colour pipeline, so the hand-over keeps one colour. Toward the
   terminator, tone the far tops down, or they go grey-white.
+  - The cause: on flat far cloud `dot(N, L) / L.y` is about 1 whatever the
+    Sun's height, and a `sunUp` gate is fully open above a mu0 of about
+    0.08. Neither carries the Sun's own fall-off.
+  - Multiplying by it (mu0) took the dive's night-side cloud from 53 to 24
+    luma, against 19 for the old look.
+- **Light far tops from about one layer under the top.** Light within a
+  layer of the top is near zero, so tops lit there drew white (174 against
+  the march's 138). Lit as a plain diffuse surface they drew 184. Use the
+  march's phase lobes and powder through that depth, and cap the top's
+  optical depth so wide flat decks (a storm's arms) don't go brown.
+- **A thin-volume glow sells far clumps as cloud.** Inner glow 3.5, Sun
+  gain 1.5 and powder 0.8 gave light inside, bright warm tops and soft
+  gradation for about 1.2 ms. Cool grey-white clumps read as ash; warm
+  them to the planet's colour.
 
 ### Baking on a planet
 
@@ -127,6 +141,18 @@ past "pebbles", "popcorn" or hairy tufts. The first faithful port of a real
   up those creases read as horizontal hatching.
 - **Keep today's cloud drawn until the first bakes finish,** then fade the
   new cloud in over about 1 s. A seek never lands on a blank.
+- **Start the first bakes far out.** Started at 8,800 km they finished on
+  the skim, after the whole dive, and the dive had no new cloud. Starting
+  at 45,000 km fixed it.
+- **Keep the old window up during a re-bake.** A "done" flag that stayed
+  true mid re-bake left the close level showing a window anchored 25,000 km
+  away, with no heaps at 440 km.
+- **Store signed distances offset.** A bake target that clamps negatives
+  read 0 everywhere and the whole view turned to fog. Store `(sd + 10) / 16`
+  as Nightscape does.
+- **A frame that runs ahead of its bake draws "fur".** Fur showed seven
+  times, every time on a run sharing the GPU. Don't judge a look from a
+  loaded run, and guard far shading against a lagging bake.
 
 ### Storms
 
@@ -146,6 +172,13 @@ past "pebbles", "popcorn" or hairy tufts. The first faithful port of a real
   camera" when the camera passed 3,000 km re-swirled 2,000 km of cloud in
   one frame: a pop everyone saw. A planet-fixed direction, set when the
   chart anchors, lets it fade in with the cloud.
+- **Skip the swirl maths outside the storm's radius.** Run for every far
+  pixel, it cost 1.8 ms with the storm off-screen. Culled, it cost 0.6-0.9
+  ms.
+- **Frame the whole vortex, eye included.** A spot picked on the chart
+  without the shot in mind was never in frame.
+- **Light the storm softly.** The 2.5D march lighting dimmed the arms; soft
+  surface lighting inside the storm only brought the cream arms back.
 
 ### Haze and horizon
 
@@ -157,6 +190,50 @@ past "pebbles", "popcorn" or hairy tufts. The first faithful port of a real
 - **Rays that reach the deep floor still take its colour,** hazed by
   distance, past the march's far limit. Otherwise a black band appears
   past the far limit.
+- **Haze the rays that slip through gaps.** Rays that pass through gaps in
+  the near march and miss the floor took no haze. That drew a stair-stepped
+  band edge with gold sky showing through holes, found with a limb debug
+  view and the weights view. Give missed rays the sky colour, and haze both
+  sides of every hand-over.
+- **Match the haze colour to the sky.** A cool mauve haze against a warm
+  gold sky showed as a line; `hazeRGB [0.95, 0.66, 0.3]` matched.
+  - A horizon gain of 1.6 softened the edge, but the line stays while the
+    sky is brighter than the haze at grazing angles.
+  - Light the haze about one haze depth along the ray, not at the chord's
+    middle.
+- **Limit haze to below a set height over the deck** (about 400 km over the
+  deck base here). Haze over the whole ray length veiled the belts
+  grey-violet.
+
+### Wisps (a cirrus veil)
+
+- **Draw wisps only near the camera.** Far off they drew rings, rails,
+  "vinyl-groove" stripes, grain and "fur in the distance". Drawing them
+  only within 500-1,200 km of the camera removed the far problems and cut
+  4 ms off the skim.
+- **A low warp at large size** (600 km) gave soft combed cirrus. A high
+  warp gave marbled "oil" whorls.
+- **Fade them close to the camera too.** Bright streaks over near clumps
+  survived near fades at 250 and 400 km and fewer octaves. Turning wisps
+  off proved they were the cause, after five rounds of tuning; a near fade
+  at 1,000 km fixed it.
+
+### Near and far: what didn't move the join
+
+- **Lighting the far band darker or with more contrast** didn't close the
+  join. Removing the far band's pale tint cancelled the dimming.
+- **Pushing the near reach out** (1,400-2,400 km along the ray from 900-1,600
+  km) moved the join up and away and softened it to a band in motion. The
+  costs:
+  - a darker frame;
+  - glassy streaks where the far slab fades over near cloud;
+  - more dot speckle on the climb;
+  - +1.6-3 ms.
+- **Measure the join:** mean luma on each side, and the share of pixels
+  under 20. The dive's join started at about 110 against 40, with half the
+  near pixels under 20. After the light changes it was still about 2:1.
+  Design both layers to agree on tone, contrast and detail size from the
+  start.
 
 ### Motion and pops
 
@@ -185,6 +262,28 @@ past "pebbles", "popcorn" or hairy tufts. The first faithful port of a real
   hour.
 - **Plain labels burned into every sheet.** Variant codes like "Z4" meant
   nothing to the person judging.
+- **Log bake state with every still** (done, chunks, where the chart
+  anchored). A short settle left bakes unfinished, and four rounds gave
+  false "no cloud" verdicts. Seek a warm-up pose first.
+- **Turn a feature off before tuning it.** An A/B with one layer off found
+  causes that rounds of knob changes missed.
+- **Timing:**
+  - Only an exclusive GPU gives valid numbers; shared runs gave 50-185 ms
+    frames.
+  - Light views read an idle floor of about 8 ms whatever they draw. Time
+    them with the scene drawn 4 times a frame (8.17 ms became 2.69 ms a
+    draw).
+  - Frame pacing can change between sessions, so compare within one run.
+  - The same look on a shared GPU spread about ±1.3 ms between runs.
+- **Software rendering is for functional checks only.** A SwiftShader
+  harness hid the WebGPU clear bug, and a script that fell back to it
+  played the lab path at 0.06x speed. Pass the real browser to scripts
+  explicitly.
+- **Parse each look's settings back before running it.** Shell variable
+  and alias clashes silently dropped settings twice (PowerShell names are
+  case-insensitive, and `FL` is a built-in alias).
+- **A per-pass GPU profiler broke the lab** (a stack overflow and a frozen
+  picture). Keep a plain per-frame GPU trace for timing.
 
 ## What didn't work
 
@@ -208,6 +307,11 @@ past "pebbles", "popcorn" or hairy tufts. The first faithful port of a real
 | Fading the near billow octave by pixel size to stop climb speckle | Speckle became horizontal ribs | The billows were hiding the field's layered steps |
 | A rib-free surface by "anti-slice" knobs (finer inside steps, soft step size) | Bright striped band at the horizon | Grazing rays draw each step as its own layer |
 | Wisp strands squashed straight along latitude | Hard rings | Needs warp; strands seen edge-on need fading |
+| Worley or billow relief in the far height field | "Fur": grey step-sliced spikes over the far band | Relief changing faster than the far march's steps; put billows in lighting only |
+| One fine detail octave on the far layer | "Reptile skin", chain-link mottle, stipple at the horizon | Detail far below heap-lobe size; heap-lobe scale (frequency 0.12) fixed it |
+| Analytic heaps instead of the bake | Harsh and flat, blobby satellite spheres; 25-37 ms | 4-5x the cost of baked reads, no better look |
+| Lowering the heaps to clear a 300 km skim | Empty deck; heaps sank into it | Raise the camera instead (a 400 km skim was clean) |
+| More fine samples in the thin volume (16, 18) | No better; +2 ms, and fur over the dive at a long span | The fix was where the samples start, not how many |
 
 ## Planet-scale traps
 

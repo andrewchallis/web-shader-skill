@@ -220,6 +220,12 @@ testing, community/bug-report links and the historical section.
   destination alpha lost their light when Chrome composited the page: the
   sky drew black in a lab while the app (opaque canvas) was right. Keep
   the lab canvas opaque like the app.
+- **Bake targets that clamp negatives.** Signed distances written straight
+  into an unsigned or clamped target read 0, and a cloud bake turned the
+  whole view to fog. Store an offset value (`(sd + 10) / 16`).
+- **Never negate a TSL node with JS unary minus.** `-node` turns into NaN
+  in the WGSL, and every look compiled to a black frame. Use
+  `node.negate()` or `node.mul(-1)`.
 - three's `dFdx`/`dFdy` emit WGSL `dpdx`/`dpdy`, which Chrome may run
   coarse (one value per 2x2 quad). For per-pixel slopes, a small TempNode
   can emit `dpdxFine`/`dpdyFine` on WebGPU and `dFdx` on WebGL2 (check

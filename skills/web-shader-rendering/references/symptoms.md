@@ -49,4 +49,10 @@ in our cloud and gas work.
 | No cloud for seconds on a fast dive, or the dive stalls | Bakes paced for a slow camera, or every strip drawing the whole target | Fast pace for first and "urgent" bakes; check the scissor (webgpu-webgl2.md) |
 | Fading fine billows turns dots into regular ribs | The billows were hiding layered steps in the field under them | Fix the underlying steps; don't fade the billows to hide speckle |
 | A thin high cloud layer reads as flat decals or fly-through plates | A sheet has no depth; a thin volume seen edge-on at speed slices | Leave it out, or make it part of the main march's density |
+| "Fur": grey hairy spikes or step-sliced cones over a far cloud band | Relief (Worley, a fine octave) in a height field that changes faster than the far march's steps; or a frame running ahead of its bake on a loaded GPU | Billows in lighting and normals only, or cells several steps wide; judge looks on an unloaded GPU ([gas-giant-clouds.md](gas-giant-clouds.md)) |
+| Bright grey-white cloud on a gas giant's night side | Flat far lighting `dot(N, L) / L.y` is about 1 whatever the Sun's height | Multiply by the Sun's own fall-off (mu0) |
+| The whole view turns to fog after a bake | Signed distances written to a target that clamps negatives read 0 | Store an offset value ([webgpu-webgl2.md](webgpu-webgl2.md)) |
+| Every look compiles to a black frame after a small change | JS unary minus on a TSL node wrote NaN into the WGSL | `.negate()` or `.mul(-1)` |
+| Stair-stepped haze edge at the horizon with sky colour showing through holes | Rays that slip through gaps in the near layer and miss the floor get no haze | Give missed rays the sky colour; haze both sides of a hand-over |
+| Cloud missing in stills taken from a frozen pose | The first bake hadn't finished within the settle time | Log bake state with every still; seek a warm-up pose first |
 | Change "did nothing" | Wrong layer is the one drawing at that height, or a guard hid it | Tint layers flat colours to see which one draws |

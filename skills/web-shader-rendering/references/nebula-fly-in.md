@@ -196,8 +196,12 @@ What worked:
   star twinkled, and the coarse gas cut shifted a little each frame. Hold
   the source star steady (no twinkle; the other stars can keep theirs) and
   blend each frame's rays over the last few (we kept 15% new per frame).
-  Restart the blend in full on a cut, a seek, a long frame gap, a camera
-  jump or a fast turn, or the beams trail behind the star.
+  Restart the blend in full on a cut, a seek, the clock jumping, a frame
+  gap over 250 ms, a big camera move or a fast turn, or stale beams hang
+  on behind the star.
+- **A pixel's own gas mustn't shadow it.** Cut by the full gas opacity,
+  every visible filament sat in its own shadow. Fade in a pixel's nearby
+  gas as a blocker over a short screen distance instead.
 - **Two fixed texture nodes for that history.** Two targets drawn in turn,
   each reading the other through its own texture node. One node swapped
   between the targets kept its first binding on WebGPU, so a target read
@@ -208,22 +212,27 @@ What worked:
   At 0.35 it read as a separate star.
 - **Rays from a quarter-size view.** Drawing the cloud alone at quarter
   size for the ray pass looked the same as half size and cost about a
-  third (1.5 against 4.3 ms on a desktop RTX).
-- **Bigger cloud, same stars.** When asked to double the cloud keeping its
-  stars the same size, scale the cloud and pass the star cores a separate
-  scale, so they move apart without growing.
+  third (1.5 against 4.3 ms on a desktop RTX). Skip both passes when the
+  viewer turns camera effects off.
+- **Bigger cloud, same stars.** The lab look read much smaller in the app
+  (we doubled it twice). Scale the gas and pass the star cores a separate
+  scale, so the stars move apart without growing.
+- **Bright only near the inner stars.** Light the gas by its distance from
+  the nearest inner star with a gradual falloff; an even glow read as
+  "too glowy".
+- **Aim the approach at the centre.** The path's first control point has
+  to sit on the line to the cloud's centre. Off it, travel and view
+  disagreed by up to 36 degrees, which read as flying in off-centre.
 - **Fog that builds near the resting point.** Dense, same-colour fog round
   the centre that thickens as the camera gets close gives the last stretch
   depth. Keep it very faint outside. It cost about 2 ms.
 - **Dim the background starfield on the way in** (we used half) and bring
   it back once inside, or a bright starfield competes with the cloud.
+  Held low to the end, it hid the star cluster seen through a gap.
 - **Ease the cloud in only once the camera has passed it.** The flight in
   went by the cloud early, and at full strength it flashed as a pale,
   hard-edged blob for 0.3 s. Easing it in while it sat behind the view
   fixed that.
-- **Keep it drawn at a tiny strength (1e-4), not zero.** Hidden at zero,
-  its shaders and passes were first built mid-shot: a 1.5 s freeze. At a
-  tiny strength they build under the loading screen as before.
 
 What didn't:
 
@@ -235,6 +244,15 @@ What didn't:
 - **Endpoint stills to judge the hand-overs.** The flash, the freeze and a
   cut to another view on the way out only showed in motion: play the shot
   through each hand-over, forward and seeking back.
+- **Keeping a hidden cloud drawn at a tiny strength (1e-4)** to stop a
+  1-2 s freeze when it first showed. The freeze stayed, and it turned out
+  to be older than the cloud. The long frame had about 10 ms of page work,
+  no shader compiles, no texture uploads and no long script tasks, so the
+  time was outside the page's JavaScript; a stall log that lists only
+  compiles can't see that. Check a freeze on the build before your change
+  before blaming the change.
+- **Waiting for the app's full boot in a test runner on WebGL.** It
+  sometimes never finished; wait only for the end of loading.
 - **Stills taken just after loading.** The first still caught the loading
   screen's drawing still fading over the cloud. Wait a few seconds after
   loading ends before the first still.

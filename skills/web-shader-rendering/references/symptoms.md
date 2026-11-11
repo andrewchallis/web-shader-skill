@@ -66,6 +66,7 @@ in our cloud and gas work.
 | God rays flicker as the camera moves | The ray source twinkles, and the coarse gas cut shifts a little each frame | Keep the source steady; blend the rays over the last few frames, restarted on any cut or jump (nebula-fly-in.md) |
 | Rays seem to come from an empty corner | The source star is fully hidden by the gas in front of it | Give its glare a small floor (about 0.12 of full) so the source always reads |
 | A blob flashes on screen as the camera passes a cloud on the way in | The cloud is drawn at full strength while the path goes by it | Ease the cloud in only once the camera is past and looking away |
-| A freeze of a second or more when a hidden cloud first shows | Hidden at zero, its shaders and passes are first built mid-shot | Keep it drawn at a tiny strength (1e-4) from the start so it builds under the loading screen |
+| A freeze of a second or more in a shot, with no shader compiles logged | Not always the shader: ours had about 10 ms of page work and was older than the new cloud | Check the build before the change; log page work, uploads and long tasks, not only compiles |
+| Each visible filament sits in a dark halo of its own when rays are on | The rays are cut by the pixel's own gas | Use only nearby gas over a short screen distance as the blocker |
 | The WebGL2 build never finishes loading (minutes) | A long ray-march shader with nested loops is too much for ANGLE on Direct3D | Time the WebGL2 compile in the lab before the app swap; pick a lighter look per backend |
 | Change "did nothing" | Wrong layer is the one drawing at that height, or a guard hid it | Tint layers flat colours to see which one draws |

@@ -104,6 +104,10 @@ budget may beat rule 3.
   for cheap far detail, lighting model, god rays, presets.
 - [references/ray-marching.md](references/ray-marching.md): march
   structure, camera inside a shell, grazing rays, lighting, cost.
+- [references/nebula-fly-in.md](references/nebula-fly-in.md): flying
+  into an emission nebula: nested levels blended as one field, steady
+  brightness, colour regions, smoke puffs in the march, twinkling stars,
+  god rays from a star behind the gas, and what didn't work.
 - [references/symptoms.md](references/symptoms.md): what a bad frame looks
   like, its cause and the fix. Read this first when debugging a look.
 - [references/webgpu-webgl2.md](references/webgpu-webgl2.md): TSL and

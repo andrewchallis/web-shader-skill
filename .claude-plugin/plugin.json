@@ -1,7 +1,7 @@
 {
   "name": "web-shader-rendering",
   "description": "Lessons for look-driven Three.js shader work on WebGPU and WebGL2 (TSL): ray-marched clouds, atmospheres, gas and nebulae, by altitude, with symptoms and fixes",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "author": {
     "name": "Andrew Challis"
   },

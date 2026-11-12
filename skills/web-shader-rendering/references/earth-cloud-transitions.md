@@ -205,3 +205,57 @@ What didn't work:
   plain steps didn't, which fits the planes finding above. Lab stills at
   these views don't show the tall streaks, so look for them in motion in
   the app next.
+
+## Thick 3D clouds in the app: what worked, what didn't
+
+From giving Earth's close clouds real thickness in the app (universe-lab
+#692, Nov 2026: Andrew, "we actually feel like we're flying through
+them"). The baked heap field and march take over from the flat deck from
+70 km down to a 12 km floor. Desktop RTX 4070, WebGPU, lab rounds thick1-6
+and app runs app-zoom17-25.
+
+What worked:
+- **Two debug views prove a layer draws.** Flat magenta wherever the pass
+  runs, and the march's raw cover in red. "Magenta everywhere, no red"
+  means the pass runs but its field is empty. One run of this split the
+  app's bug from the lab's working layer.
+- **Don't anchor a planet chart from inside the planet.** The app's shader
+  warm-up draws every body from a camera at its centre. The 3D clouds
+  anchored their local chart there, it came out NaN, and it stayed NaN:
+  the layer drew full screen and marched nothing. Skip updates when the
+  camera is under about 0.5 km, re-anchor when the chart is invalid or
+  about 1,000 km off, and invalidate the bakes after.
+- **Bake before the frame, not inside the scene pass.** Bakes run from a
+  draw callback inside the app's scene pass produced nothing (and, with
+  an MRT set, an empty WGSL output struct: webgpu-webgl2.md).
+- **The 3D layer must read the same cover map as the flat one.** With a
+  coarser map, a dense deck handed over to sparse 3D cover at about 30 km
+  and the clouds seemed to vanish. Read the same detailed tiles in both.
+- **Only the fine bake has heaps, so its width sets the 3D reach.** The
+  coarse levels bake the deck alone. A 96 km fine window drew flat cut-outs
+  past mid-distance; about 290 km drew heaps nearly to the horizon at no
+  cost the lab could measure.
+- **No pop-in: start early, ease in.** Fading in on a timer while the
+  bakes weren't ready drew empty sea, then a full heap field in one frame
+  (frame step 69 levels). Starting the bakes at 1.6 times the fade's top
+  (about 112 km) and easing the layer in over 1.2 s once ready, with the
+  deck giving way at the same pace, brought the largest step to 4 and
+  added no stalls.
+- **The bake's top must clear the tallest heap, and above it is clear
+  air.** With the top at about 6 km, the tall heaps over full land cover
+  were cut and drew tall vertical spikes. Raising it to about 8 km (26
+  units, 48 heights) removed them. Get the sign right: here a positive
+  signed distance is inside the cloud. Reading the space above the top as
+  cloud drew a hard white line just above the horizon, from rays rising
+  out of the layer.
+- **Thin high wisps near eye level.** From the 12 km floor, half a km
+  above the high layer, it was seen edge-on at full strength and drew
+  long streaks across the sea. Keep it faint from just above its shell.
+
+Still open (Nov 2026):
+- Over full land overcast below 17 km the 3D layer covers about half
+  where the flat deck covers all of it. At 45 km they match.
+- Soft grey diagonal smears over open land looking down, a faint comb
+  fringe on near heap edges, and soft near heap tops looking straight down.
+- Concentric swirl rings on dark sea at 40 to 140 km.
+

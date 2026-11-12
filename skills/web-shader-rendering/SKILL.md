@@ -89,6 +89,17 @@ budget may beat rule 3.
   baked noise, planet-fixed noise, ground fog, a close-up sea (waves,
   sparkles, distance fade), street-level city lights. Read before terrain
   or sea work.
+- [references/gas-giant-clouds.md](references/gas-giant-clouds.md): the
+  full Jupiter record (about 200 rounds, five approaches): what worked,
+  what didn't, planet-scale traps, open issues, and a checklist for
+  Saturn, the ice giants or any cloud seen from orbit down to a skim. Read
+  before starting cloud work on a planet.
+- [references/gas-giant-snippets.md](references/gas-giant-snippets.md):
+  short TSL code for the Jupiter pieces that took the most rounds.
+- [references/air-composition.md](references/air-composition.md): one
+  atmosphere model, composed as scene x T + S exactly once; the traps that
+  draw a glow band at a planet's edge, and a zero-air control. Read before
+  atmosphere or haze work.
 - [references/cloud-types.md](references/cloud-types.md): settings and
   looks for the ten Earth cloud types, and how they carry over to gas
   giant decks and haze.
@@ -97,6 +108,10 @@ budget may beat rule 3.
   for cheap far detail, lighting model, god rays, presets.
 - [references/ray-marching.md](references/ray-marching.md): march
   structure, camera inside a shell, grazing rays, lighting, cost.
+- [references/nebula-fly-in.md](references/nebula-fly-in.md): flying
+  into an emission nebula: nested levels blended as one field, steady
+  brightness, colour regions, smoke puffs in the march, twinkling stars,
+  god rays from a star behind the gas, and what didn't work.
 - [references/symptoms.md](references/symptoms.md): what a bad frame looks
   like, its cause and the fix. Read this first when debugging a look.
 - [references/webgpu-webgl2.md](references/webgpu-webgl2.md): TSL and

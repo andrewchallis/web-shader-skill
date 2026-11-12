@@ -170,6 +170,15 @@ testing, community/bug-report links and the historical section.
   costs more and may not unroll.
 - A look change in TSL means one shader compile. In a fast harness, show
   compile time separately from frame time.
+- Two `const` names that clash inside one TSL function (a loop's `tIn` and
+  a later `tIn`) can fail only when the WGSL is built. Give every variable
+  in a long shader a distinct name.
+- The bundler doesn't catch an undefined name inside TSL code; the shader
+  fails at run time on the GPU machine. Lint for undefined names before a
+  GPU run (for example ESLint with `no-undef`).
+- On WebGPU, work out any `fwidth` (or other derivative) before an `If` or
+  a loop that branches per pixel, with `.toVar()`, and read textures inside
+  such branches at `.level(0)`.
 
 ## WebGL2 fallback
 
@@ -197,6 +206,26 @@ testing, community/bug-report links and the historical section.
   When frame time is far above the GPU readout, take a Chrome trace: a
   `Queue::Submit` blocking most of the frame means the GPU is the limit.
 - One bloom or post node per scene pipeline multiplies passes; share them.
+- **Scissored render-target passes (three r186-r187).** A render target's
+  scissor is applied only while the renderer's own scissor test is on
+  (`renderer.setScissorTest(true)`). Without it every "strip" drew the
+  whole target: 36 heights a frame and long stalls. And WebGPU clears the
+  whole target at the start of a pass (`loadOp: clear` ignores the
+  scissor), so set `renderer.autoClear = false` round the strips or each
+  strip wipes the others. WebGL's clear keeps to the scissor, so a WebGL
+  harness looks right while WebGPU draws nothing.
+- **Default max 2D texture size is 8192** unless you request more. Lay a
+  big atlas out as a grid of tiles, not one long column.
+- **Canvas alpha.** With `alpha: true` on the canvas, shells that keep the
+  destination alpha lost their light when Chrome composited the page: the
+  sky drew black in a lab while the app (opaque canvas) was right. Keep
+  the lab canvas opaque like the app.
+- **Bake targets that clamp negatives.** Signed distances written straight
+  into an unsigned or clamped target read 0, and a cloud bake turned the
+  whole view to fog. Store an offset value (`(sd + 10) / 16`).
+- **Never negate a TSL node with JS unary minus.** `-node` turns into NaN
+  in the WGSL, and every look compiled to a black frame. Use
+  `node.negate()` or `node.mul(-1)`.
 - three's `dFdx`/`dFdy` emit WGSL `dpdx`/`dpdy`, which Chrome may run
   coarse (one value per 2x2 quad). For per-pixel slopes, a small TempNode
   can emit `dpdxFine`/`dpdyFine` on WebGPU and `dFdx` on WebGL2 (check
@@ -207,8 +236,11 @@ testing, community/bug-report links and the historical section.
   encoded in is rejected ("Invalid CommandBuffer ... due to a previous
   error"), and every draw in that submit is lost. WebGL2 compiles the same
   material without a word, so read the WebGPU console on every new layer.
-  Seen with Earth's close layers on (four MeshBasicNodeMaterials), not
-  with them off. The material behind it wasn't identified yet.
+  Seen with Earth's close layers on, not with them off. The cause was a
+  bake pass (a full-screen quad into its own target) run inside the app's
+  scene pass, which had an MRT set: the bake's material inherited the MRT
+  outputs and ended with none. Running the bake with
+  `renderer.setMRT(null)` (and restoring it after) fixed it.
 
 ## Precision
 

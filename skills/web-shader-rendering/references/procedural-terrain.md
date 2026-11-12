@@ -272,8 +272,8 @@ viewer zoom down to 12 km (Nov 2026, lab, desktop RTX 4070, WebGPU).
   mismatch.
 
 Zoom and tilt below were designed in a unit simulation and then checked in
-the app on the desktop (WebGPU and WebGL, stills and a real-time wheel
-clip):
+the app on the desktop (WebGPU and WebGL, stills, a real-time wheel clip
+and later slow motion clips with drags at the floor):
 
 - **Zoom in log steps of height, not of distance from the centre.** Near a
   globe, steps in centre distance barely move at 20 km. Steps in height
@@ -298,7 +298,19 @@ What the first app run showed (Explore over Earth, Nov 2026):
   renderers: no city lights, no ground, no cloud. At 906 km the city
   lights still showed. With the close layers off, the same steps drew the
   globe, so the close layers are what goes dark. Day-side lab stills alone
-  wouldn't have caught this. Cause not found yet.
+  wouldn't have caught this. There were two causes. A cloud bake with no
+  fragment outputs sank whole submits on WebGPU (webgpu-webgl2.md). Then
+  the close ground's street lights were too dim from a few hundred km up:
+  a street light gain that rises with distance kept towns lit all the way
+  down (roads and street grids from 333 to 45 km).
+- **Scale the drift with height.** Explore's slow drift was a fixed angle
+  per second. At 12 km that raced the ground by at about 160 km/s, so
+  street tiles never finished loading and day and night swept under the
+  camera. Scale drift, drag and momentum with height above the ground.
+- **Drags low down turn and tilt the view, not the orbit.** A sideways drag
+  turns the heading and a vertical drag tilts the view grab-style, up to
+  a touch above level, both easing back on the way up. Without a limit,
+  letting go after a drag looked up into all sky.
 - **Bound the wheel climb.** A real-time climb from the floor with steady
   wheel turns went past the planet's own zoom range, and the app flew out
   to the whole-solar-system view. If climbing out shouldn't leave the
@@ -306,6 +318,14 @@ What the first app run showed (Explore over Earth, Nov 2026):
 - A camera-height readout taken from a scene's sound sources came back
   empty in Explore. Read height from the camera and the planet's radius,
   or from the on-screen distance.
+
+QA lessons from the app runs:
+- Measure brightness with ffmpeg `signalstats`, not a 1x1 downscale (it
+  gave wrong night numbers).
+- Find frozen frames with `freezedetect` and check gaps in frame times.
+- Pin the place: Earth's turn moved the ground about 55 km in two
+  minutes, so back-to-back A/B runs weren't over the same spot. Hold the
+  drift, and check that day and night captures look where the zoom heads.
 
 ## Workflow that saved time
 

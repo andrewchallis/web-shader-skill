@@ -243,6 +243,90 @@ Test setup:
 - A loading check waited for the app to pause, but that stop auto-plays:
   it looked like a hang on main too.
 
+## Ground and clouds together, and zooming down to them
+
+From putting the lifted ground under Earth's close clouds and letting the
+viewer zoom down to 12 km (Nov 2026, lab, desktop RTX 4070, WebGPU).
+
+- **Light the lifted ground by the sphere's normal, not `normalWorld`.**
+  With the ground patches lifted from the globe's shader, some longitudes
+  drew their day side as night: black ground and lit street lights under
+  sunlit clouds. Taking the normal from the object-space position
+  (`modelWorldMatrix * vec4(normalize(positionGeometry), 0)`) and the view
+  cosine from `cameraPosition - positionWorld` fixed it. All six check
+  stills (sea skim, Alps skim, Pacific with the sun at 60 degrees, at 20 km)
+  were daylit afterwards. We didn't pin down why `normalWorld` was wrong on
+  the patch mesh. On any lifted or re-meshed surface, don't trust the
+  geometry's normals for day and night; use the sphere's normal.
+- **Split a combined-layer bug with the same view in two subjects.** Draw
+  the ground-only lab subject and the full Earth subject (clouds and ground)
+  with the same layers, views and sun in one run. Matching results put the
+  fault in the ground shader, not in how the layers combine. Include a
+  view over open sea, not only land: one bad longitude can hide on land.
+- **Check that the ground puts places where the globe does.** When a lifted
+  ground takes over from the globe's texture, draw the same views with the
+  ground off and on (here 2,000 and 300 km looking down, over open sea and
+  over land). If coastlines and continents line up, the ground's
+  coordinates agree with the globe's. Here they lined up in all four pairs.
+  An earlier "land where the globe has sea" was a different view, not a
+  mismatch.
+
+Zoom and tilt below were designed in a unit simulation and then checked in
+the app on the desktop (WebGPU and WebGL, stills, a real-time wheel clip
+and later slow motion clips with drags at the floor):
+
+- **Zoom in log steps of height, not of distance from the centre.** Near a
+  globe, steps in centre distance barely move at 20 km. Steps in height
+  above the surface move as far at 20 km as at 2,000 km.
+- **Tilt towards the horizon low down.** Below about 200 km the view tilts
+  from straight down to about 0.1 radians below level at the floor
+  (12 km, clear of the highest lifted ground), in log steps of height.
+  Straight down at 20 km shows a flat map; the horizon shows the clouds
+  and air as layers.
+- **Pull the near plane in with height**, as the app does close to Earth
+  (about a quarter of the height, at most 1% of the distance), or the
+  near ground and cloud get clipped. Set it the same way in the lab
+  subject, or lab stills won't match the app.
+
+What the first app run showed (Explore over Earth, Nov 2026):
+
+- Log steps of height worked: one wheel step per still went 18,199, 6,695,
+  2,463, 906, 333, 123, 45, 17 and 12 km (the floor), each step about
+  2.7 times lower, and back up the same way.
+- **Check the night side too.** The run happened to arrive over night.
+  From 333 km down to the 12 km floor, every view was black in both
+  renderers: no city lights, no ground, no cloud. At 906 km the city
+  lights still showed. With the close layers off, the same steps drew the
+  globe, so the close layers are what goes dark. Day-side lab stills alone
+  wouldn't have caught this. There were two causes. A cloud bake with no
+  fragment outputs sank whole submits on WebGPU (webgpu-webgl2.md). Then
+  the close ground's street lights were too dim from a few hundred km up:
+  a street light gain that rises with distance kept towns lit all the way
+  down (roads and street grids from 333 to 45 km).
+- **Scale the drift with height.** Explore's slow drift was a fixed angle
+  per second. At 12 km that raced the ground by at about 160 km/s, so
+  street tiles never finished loading and day and night swept under the
+  camera. Scale drift, drag and momentum with height above the ground.
+- **Drags low down turn and tilt the view, not the orbit.** A sideways drag
+  turns the heading and a vertical drag tilts the view grab-style, up to
+  a touch above level, both easing back on the way up. Without a limit,
+  letting go after a drag looked up into all sky.
+- **Bound the wheel climb.** A real-time climb from the floor with steady
+  wheel turns went past the planet's own zoom range, and the app flew out
+  to the whole-solar-system view. If climbing out shouldn't leave the
+  planet, stop at its top zoom.
+- A camera-height readout taken from a scene's sound sources came back
+  empty in Explore. Read height from the camera and the planet's radius,
+  or from the on-screen distance.
+
+QA lessons from the app runs:
+- Measure brightness with ffmpeg `signalstats`, not a 1x1 downscale (it
+  gave wrong night numbers).
+- Find frozen frames with `freezedetect` and check gaps in frame times.
+- Pin the place: Earth's turn moved the ground about 55 km in two
+  minutes, so back-to-back A/B runs weren't over the same spot. Hold the
+  drift, and check that day and night captures look where the zoom heads.
+
 ## Workflow that saved time
 
 - An A/B look per suspect in one page load (same views, several looks)

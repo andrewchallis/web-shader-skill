@@ -230,6 +230,17 @@ testing, community/bug-report links and the historical section.
   coarse (one value per 2x2 quad). For per-pixel slopes, a small TempNode
   can emit `dpdxFine`/`dpdyFine` on WebGPU and `dFdx` on WebGL2 (check
   `builder.renderer.backend.isWebGPUBackend`).
+- WGSL error "structures must have at least one member" on
+  `struct OutputType` means a node material's fragment stage came out
+  with no outputs. Its pipeline is invalid, the command buffer it is
+  encoded in is rejected ("Invalid CommandBuffer ... due to a previous
+  error"), and every draw in that submit is lost. WebGL2 compiles the same
+  material without a word, so read the WebGPU console on every new layer.
+  Seen with Earth's close layers on, not with them off. The cause was a
+  bake pass (a full-screen quad into its own target) run inside the app's
+  scene pass, which had an MRT set: the bake's material inherited the MRT
+  outputs and ended with none. Running the bake with
+  `renderer.setMRT(null)` (and restoring it after) fixed it.
 
 ## Precision
 

@@ -348,3 +348,69 @@ cost. Brightening the floor did nothing.
 | Sky light | 1.4 | 3 |
 | Sky-light floor in shade | 0.28 | 0.6 |
 | Floor shadow minimum | 0.5 | 0.8 |
+
+## Cloud carried along a flow, with vortices
+
+From [cloud-layer-over-a-photo.md](cloud-layer-over-a-photo.md). `p` is
+the sample in planet radii, `F` the noise cells per radius. The result is
+added to `p.mul(F)` for the big shapes and the colour lookup; fine octaves
+read `p.mul(F)` itself. Work it out once per march sample and reuse it for
+that sample's Sun steps.
+
+```js
+// [kx, ky, kz, phase, how far it carries cloud, in cells]
+const MODES = [[0.31, 0.22, -0.33, 0.0, 0.7], [-0.18, 0.38, 0.27, 1.9, 0.7], [0.40, -0.12, 0.26, 4.1, 0.7],
+  [0.7, 0.5, -0.5, 2.6, 0.5], [1.6, -1.1, 1.0, 3.3, 0.18], [-0.9, 1.5, -1.3, 5.2, 0.18]];
+const STEPS = 4;
+const flowDisp = p => {
+  const q0 = p.mul(F), r0 = length(q0);
+  let x = q0;
+  for (let j = 0; j < STEPS; j++) {
+    const n = normalize(x), a = n.mul(F);          // the flow depends on direction only: same at every height
+    let grad = vec3(0);
+    for (const [kx, ky, kz, ph, D] of MODES) {
+      const k = Math.hypot(kx, ky, kz);
+      grad = grad.add(vec3(kx, ky, kz).mul(cos(a.x.mul(kx).add(a.y.mul(ky)).add(a.z.mul(kz)).add(ph)).mul(D / k / STEPS)));
+    }
+    x = normalize(x.sub(n.cross(grad))).mul(r0);   // n x grad: sideways, no sources or sinks; keep the radius
+  }
+  // vortices: { c: unit vector to the centre, r: radius in radians, twist: radians at the centre }
+  const xv = x.toVar(), nv = normalize(xv).toVar();
+  for (const v of VORTICES) {
+    const c = vec3(...v.c), cd = dot(nv, c);
+    If(cd.greaterThan(Math.cos(v.r * 2.4)), () => {
+      const th = exp(float(1).sub(cd).mul(2).div(v.r * v.r).negate()).mul(v.twist);   // 2(1 - cos) is the angle squared
+      xv.assign(xv.mul(cos(th)).add(c.cross(xv).mul(sin(th))).add(c.mul(dot(c, xv)).mul(float(1).sub(cos(th)))));
+    });
+  }
+  return xv.sub(q0);
+};
+```
+
+## Short steps where a long one finds near cloud
+
+`cheap(p)` is the density without fine octaves (never less than the full
+one); `full(p, t)` has them. `N` long steps, `K` short ones to a long one,
+`XTRA` the budget of extra iterations a pixel.
+
+```js
+const x = float(0).toVar(), mode = float(0).toVar(), spent = float(0).toVar();
+Loop(N + XTRA, () => {
+  const fine = mode.greaterThan(0.5);
+  const xb = min(x.add(select(fine, float(1 / (N * K)), float(1 / N))), 1).toVar();
+  const ta = span.mul(pow(x, 1.7)), dt = span.mul(pow(xb, 1.7)).sub(ta).toVar();
+  const t = t0.add(ta).add(dt.mul(jitter)).toVar(), p = camera.add(rd.mul(t)).toVar();
+  const dC = cheap(p).toVar();
+  const close = pixelAngle.mul(t).mul(radiusKm).lessThan(2.5);      // km a pixel at the sample
+  If(fine.not().and(close).and(dC.greaterThan(0.02)).and(spent.lessThan(XTRA - K)), () => {
+    mode.assign(K + 1); spent.addAssign(1);                          // go back over this long step, short
+  }).Else(() => {
+    const inCloud = float(0).toVar();
+    If(dC.greaterThan(0.004), () => { /* d = full(p, t); if d > 0: shade with dt, inCloud = 1 */ });
+    x.assign(xb);
+    If(fine, () => { spent.addAssign(1);
+      mode.assign(select(spent.greaterThanEqual(XTRA), float(0), select(inCloud.greaterThan(0.5), max(mode.sub(1), 2), mode.sub(1)))); });
+  });
+  If(T.lessThan(0.01).or(x.greaterThanEqual(1)), () => { Break(); });
+});
+```

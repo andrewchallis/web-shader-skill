@@ -329,6 +329,13 @@ past "pebbles", "popcorn" or hairy tufts. The first faithful port of a real
   at 45,000 km never showed on the dive. Pick positions from the planet,
   not from wherever the chart happened to start.
 
+## After this record
+
+On 12 Nov 2026 a different renderer was tried in the lab: one thick marched
+layer over the photo, with a storm placed on a real oval. Its 31 rounds,
+including the hand-over from the photo, are in
+[cloud-layer-over-a-photo.md](cloud-layer-over-a-photo.md).
+
 ## Still open (11 Nov 2026)
 
 From the end-to-end review of the app on main (build 496):

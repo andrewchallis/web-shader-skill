@@ -242,6 +242,32 @@ testing, community/bug-report links and the historical section.
   outputs and ended with none. Running the bake with
   `renderer.setMRT(null)` (and restoring it after) fixed it.
 
+- **Safari's 8 KB private memory cap.** WGSL limits the variables in
+  the private address space to 8192 bytes per entry point, and the `var`s
+  in one function to 8192 bytes ([spec limits](https://www.w3.org/TR/WGSL/#limits)).
+  WebKit enforces both; Chrome's Dawn doesn't, so a big shader that runs
+  on every desktop fails only in Safari: "Async render pipeline creation
+  failed ... The combined byte size of all variables in the private
+  address space exceeds 8192 bytes", and the object draws black. three
+  r186 puts every shared TSL node (one used more than once, plus each
+  `.toVar()`) in a module-scope `var<private>`, so a long ray march with
+  unrolled JS loops gets there fast: a gas giant shader had 2,430 of them
+  (13.5 KB). Moving them into `main` (`allowGlobalVariables = false`)
+  doesn't help, because of the per-function cap. What does: a `let`
+  counts against neither. Use `.toConst()` for values set once, and for
+  three's automatic shared temporaries write `let name : T = expr` where
+  they are first built (a small `TempNode.build` override, gated per
+  material). A `let` only lives in its block, so a shared node first built
+  inside an If or Loop and read after it no longer compiles: after the
+  build, turn just those back into `var<private>`. Then the shader does
+  the same maths (check by renaming temporaries in order in both WGSL
+  texts and diffing; they matched line for line) and the gas giant went
+  to 2 KB. To find shaders at risk without a Mac, hook
+  `GPUDevice.prototype.createShaderModule` in headless Chromium (WebGPU
+  runs on SwiftShader with `--enable-unsafe-webgpu --use-webgpu-adapter=swiftshader`
+  well enough to build shaders) and add up each module's
+  `var<private>` sizes. Keep some margin under 8192.
+
 ## Precision
 
 - Float32 in shaders can't hold a camera near a planet in a scene built at

@@ -36,6 +36,21 @@ Or copy `skills/web-shader-rendering/` into a project's `.claude/skills/`.
 - `references/prior-art.md`: open-source cloud renderers worth studying.
 - `sources/`: original shader code whose licence allows sharing.
 
+## Three.js skill pack
+
+The plugin also carries 27 `threejs-*` skills from
+[linegel/threejs-complete-set-of-skill](https://github.com/linegel/threejs-complete-set-of-skill)
+(commit `e3c9563`), copied unchanged into `skills/`. They cover the wider
+Three.js WebGPU/TSL stack: procedural geometry, materials, fields, planets,
+vegetation, buildings and creatures; sky, clouds, spectral ocean, water,
+rain and snow; shadows, ambient occlusion, bloom, exposure and the image
+pipeline; cameras, particles, motion, debugging and visual validation.
+Start with `threejs-choose-skills`, which picks the smallest set for a task.
+
+Installed through the plugin, they're named
+`web-shader-rendering:threejs-<topic>`, for example
+`/web-shader-rendering:threejs-spectral-ocean`.
+
 ## Updates
 
 A workflow raises the patch version in `.claude-plugin/` after every merge
@@ -48,3 +63,5 @@ The skill's own text is MIT. Files in `sources/` keep their authors'
 licences, given in each file's header.
 `references/cloud-types.md` and `references/ck42bb-procedural-clouds.md` are adapted from Kingsley (CK42BB)'s
 procedural-clouds-threejs skill, MIT; the notice is at the end of each file.
+The `skills/threejs-*` folders are ISC-licensed by the Three.js WebGPU Skill
+Pack contributors; each keeps its own `LICENSE` file.

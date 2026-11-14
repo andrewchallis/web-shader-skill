@@ -249,24 +249,34 @@ testing, community/bug-report links and the historical section.
   on every desktop fails only in Safari: "Async render pipeline creation
   failed ... The combined byte size of all variables in the private
   address space exceeds 8192 bytes", and the object draws black. three
-  r186 puts every shared TSL node (one used more than once, plus each
-  `.toVar()`) in a module-scope `var<private>`, so a long ray march with
-  unrolled JS loops gets there fast: a gas giant shader had 2,430 of them
-  (13.5 KB). Moving them into `main` (`allowGlobalVariables = false`)
-  doesn't help, because of the per-function cap. What does: a `let`
-  counts against neither. Use `.toConst()` for values set once, and for
-  three's automatic shared temporaries write `let name : T = expr` where
-  they are first built (a small `TempNode.build` override, gated per
-  material). A `let` only lives in its block, so a shared node first built
-  inside an If or Loop and read after it no longer compiles: after the
-  build, turn just those back into `var<private>`. Then the shader does
-  the same maths (check by renaming temporaries in order in both WGSL
-  texts and diffing; they matched line for line) and the gas giant went
-  to 2 KB. To find shaders at risk without a Mac, hook
-  `GPUDevice.prototype.createShaderModule` in headless Chromium (WebGPU
-  runs on SwiftShader with `--enable-unsafe-webgpu --use-webgpu-adapter=swiftshader`
-  well enough to build shaders) and add up each module's
-  `var<private>` sizes. Keep some margin under 8192.
+  r186 writes every `.toVar()` and every reused node of a shader's main
+  stage as a module-scope `var<private>`, so a long ray march with
+  unrolled JS loops gets there fast (a gas giant globe held 20.5 KB, a gas
+  giant cloud about 14 KB, Earth close-up shaders about 9 KB).
+  - Moving them into `main` (`allowGlobalVariables = false`) doesn't
+    help, because of the per-function cap.
+  - What works, for every shader at once: rewrite the WGSL three built.
+    Wrap the backend's `createNodeBuilder` so each builder's `buildCode`
+    passes `vertexShader`, `fragmentShader` and `computeShader` through a
+    fixer. The fixer turns each private variable that is written once, as
+    a whole one-line statement inside a block, and read only after that
+    write in the same block, into `let name : T = ...` at the write (same
+    type, so conversions don't change). Anything written twice, written
+    in part (`x.y = ...`, `+=`), read before the write or outside its
+    block, or passed by pointer stays a variable. A `let` counts against
+    neither cap, and the shader computes the same thing. WebGPU only;
+    keep a URL switch to turn it off for comparison.
+  - A chain of `select()`s makes a variable per step; write such lookups
+    as arithmetic or a real `Fn`.
+  - Fixing the cap only makes the shader build. On a laptop GPU the same
+    shaders can still run at single-figure frame rates; plan a lighter
+    build for low quality settings.
+  - To find shaders at risk without a Mac, hook
+    `GPUDevice.prototype.createShaderModule` in headless Chromium (WebGPU
+    runs on SwiftShader with `--enable-unsafe-webgpu
+    --use-webgpu-adapter=swiftshader` well enough to build shaders, not to
+    draw big ones) and add up each module's `var<private>` sizes. Keep
+    some margin under 8192.
 
 ## Precision
 

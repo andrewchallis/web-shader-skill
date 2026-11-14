@@ -242,6 +242,42 @@ testing, community/bug-report links and the historical section.
   outputs and ended with none. Running the bake with
   `renderer.setMRT(null)` (and restoring it after) fixed it.
 
+- **Safari's 8 KB private memory cap.** WGSL limits the variables in
+  the private address space to 8192 bytes per entry point, and the `var`s
+  in one function to 8192 bytes ([spec limits](https://www.w3.org/TR/WGSL/#limits)).
+  WebKit enforces both; Chrome's Dawn doesn't, so a big shader that runs
+  on every desktop fails only in Safari: "Async render pipeline creation
+  failed ... The combined byte size of all variables in the private
+  address space exceeds 8192 bytes", and the object draws black. three
+  r186 writes every `.toVar()` and every reused node of a shader's main
+  stage as a module-scope `var<private>`, so a long ray march with
+  unrolled JS loops gets there fast (a gas giant globe held 20.5 KB, a gas
+  giant cloud about 14 KB, Earth close-up shaders about 9 KB).
+  - Moving them into `main` (`allowGlobalVariables = false`) doesn't
+    help, because of the per-function cap.
+  - What works, for every shader at once: rewrite the WGSL three built.
+    Wrap the backend's `createNodeBuilder` so each builder's `buildCode`
+    passes `vertexShader`, `fragmentShader` and `computeShader` through a
+    fixer. The fixer turns each private variable that is written once, as
+    a whole one-line statement inside a block, and read only after that
+    write in the same block, into `let name : T = ...` at the write (same
+    type, so conversions don't change). Anything written twice, written
+    in part (`x.y = ...`, `+=`), read before the write or outside its
+    block, or passed by pointer stays a variable. A `let` counts against
+    neither cap, and the shader computes the same thing. WebGPU only;
+    keep a URL switch to turn it off for comparison.
+  - A chain of `select()`s makes a variable per step; write such lookups
+    as arithmetic or a real `Fn`.
+  - Fixing the cap only makes the shader build. On a laptop GPU the same
+    shaders can still run at single-figure frame rates; plan a lighter
+    build for low quality settings.
+  - To find shaders at risk without a Mac, hook
+    `GPUDevice.prototype.createShaderModule` in headless Chromium (WebGPU
+    runs on SwiftShader with `--enable-unsafe-webgpu
+    --use-webgpu-adapter=swiftshader` well enough to build shaders, not to
+    draw big ones) and add up each module's `var<private>` sizes. Keep
+    some margin under 8192.
+
 ## Precision
 
 - Float32 in shaders can't hold a camera near a planet in a scene built at

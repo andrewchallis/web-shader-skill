@@ -217,7 +217,7 @@ view, not tested at our scales.
 
 - [procedural-stars-threejs](https://github.com/CK42BB/procedural-stars-threejs)
   (`4c04e03`) -> [sources/ck42bb-procedural-starfield.md](../sources/ck42bb-procedural-starfield.md).
-  Most relevant to Elsewhere's skies and nebulae. Useful bits: uniform
+  Useful techniques for skies and nebulae include uniform
   sphere placement with `acos(2r-1)` (linear sampling clusters at poles);
   blackbody colour per star (all-white stars look fake); point size from
   magnitude, twinkle in the vertex shader, one Points draw; Milky Way as

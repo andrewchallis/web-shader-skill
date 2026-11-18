@@ -1,6 +1,6 @@
 # CK42BB procedural-landscapes-threejs
 
-From [procedural-landscapes-threejs](https://github.com/CK42BB/procedural-landscapes-threejs), Kingsley (CK42BB), commit `f7c147a`, MIT (notice at the end). Terrain from FBM, ridged multifractal, domain warp and terraces; WGSL compute heightmap, normals and hydraulic erosion; water, sky and vegetation scattering. Teaching samples, not tested at Elsewhere's scales; read for ideas and port to TSL. Each original file follows unchanged.
+From [procedural-landscapes-threejs](https://github.com/CK42BB/procedural-landscapes-threejs), Kingsley (CK42BB), commit `f7c147a`, MIT (notice at the end). Terrain from FBM, ridged multifractal, domain warp and terraces; WGSL compute heightmap, normals and hydraulic erosion; water, sky and vegetation scattering. Teaching samples for reference when porting techniques to TSL. Each original file follows unchanged.
 
 ---
 

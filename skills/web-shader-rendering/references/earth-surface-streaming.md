@@ -164,32 +164,25 @@ sphere remains a smooth sphere. For actual ground entry, verify matching
 height queries, geometry, surface collision and depth across the globe
 and local mesh before reducing the camera clearance.
 
-## Reuse check: universe-lab snapshot
+## Example: auditing an existing Earth renderer
 
-The comparison in this investigation read local `origin/main`
-[877ad0c8d91d3897df261574d2a94c47e8163bed](https://github.com/andrewchallis/universe-lab/tree/877ad0c8d91d3897df261574d2a94c47e8163bed)
-(build 471); remote verification was unavailable then. This is an example
-inventory, not a current project requirement.
+A source inspection found several features that could support a descent:
 
-- `earth-today.js` selects `hd` by default; `white-dwarf.js` enables
-  streamed surface, night and cloud layers on non-low-memory devices.
-- `earth-detail.js` keeps four nearby tiles per layer on a fixed 16 by 8
-  grid, with KTX2 loading, coarse fallback, fades, stale-load checks and
-  sliced GPU uploads. Its 32K global imagery is about 1.2 km/px at the
-  equator, not a multilevel pyramid reaching tens of metres.
-- `terrain-lod.js` already supplies adaptive geometry, horizon rejection,
-  capacity limits, hysteresis and skirts. Its inspected callers were
-  Mars and future Earth, not today's Earth.
-- `solar-explore.js` sets Earth's nearest orbit to 1.4 radii, about
-  2,548 km altitude. Flight pacing and near clipping already respond to
-  surface clearance.
-- Optional `earth=patches` shading reuses photo detail but explicitly
-  loses geographic accuracy below about 5 km. Apparent detail does not
-  establish higher-resolution measurements.
+- Surface, night and cloud layers stream on devices with enough memory.
+- A fixed 16 by 8 grid keeps four nearby tiles per layer, with KTX2 loading,
+  coarse fallback, fades, stale-load checks and sliced GPU uploads. The
+  32K global imagery gives about 1.2 km/px at the equator. Reaching tens
+  of metres would require higher-resolution imagery and more tile levels.
+- Other planets already use adaptive terrain geometry with horizon
+  rejection, capacity limits, hysteresis and skirts.
+- The nearest orbit is 1.4 Earth radii from the centre, about 2,548 km
+  altitude. Flight pacing and near clipping respond to surface clearance.
+- Optional photo-based surface patches add apparent detail but lose
+  geographic accuracy below about 5 km.
 
-The smallest next change should extend the existing missing layer, rather
-than rebuilding streaming or terrain infrastructure. Recheck current
-callers and asset provenance before using any of these historical facts.
+Check which layers and camera controls already exist before designing a
+descent. Extending the missing layer can reuse the streaming and terrain
+systems already in place.
 
 ## Acceptance checks
 

@@ -208,11 +208,9 @@ What didn't work:
 
 ## Thick 3D clouds in the app: what worked, what didn't
 
-From giving Earth's close clouds real thickness in the app (universe-lab
-#692, Nov 2026: Andrew, "we actually feel like we're flying through
-them"). The baked heap field and march take over from the flat deck from
-70 km down to a 12 km floor. Desktop RTX 4070, WebGPU, lab rounds thick1-6
-and app runs app-zoom17-25.
+In the Earth close-cloud tests, a baked heap field and ray march took over
+from the flat deck from 70 km down to a 12 km floor. The lab and app runs
+used WebGPU on a desktop RTX 4070.
 
 What worked:
 - **Two debug views prove a layer draws.** Flat magenta wherever the pass

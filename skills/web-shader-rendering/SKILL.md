@@ -69,6 +69,15 @@ budget may beat rule 3.
    about 4/255), soft patches between bands, shapes that pop or slide.
 6. Check the WebGL2 fallback, look for link errors, and time it on the
    target GPU.
+7. Before calling a look done, check it in the real app on the fastest and
+   most oblique camera path that crosses each hand-over. A harness with its
+   own camera and Sun cleared a band and a pop that the app then showed.
+
+When a frame looks wrong, test the cause before naming it: switch one
+thing off at a time until the fault goes, and measure patches before saying
+a colour or brightness differs. Three confident wrong diagnoses in a row
+are recorded in
+[references/cloud-layer-over-a-photo.md](references/cloud-layer-over-a-photo.md).
 
 ## References in this skill
 
@@ -94,6 +103,12 @@ budget may beat rule 3.
   what didn't, planet-scale traps, open issues, and a checklist for
   Saturn, the ice giants or any cloud seen from orbit down to a skim. Read
   before starting cloud work on a planet.
+- [references/cloud-layer-over-a-photo.md](references/cloud-layer-over-a-photo.md):
+  a marched cloud layer (as flight sims do it) over a photo-mapped planet:
+  close detail, a cloud floor with openings, cloud and colour carried along
+  a flow, vortices and a storm to fly into, handing over from the photo
+  without a seam, camera paths and fly-in measurement. Read before adding a
+  volume under a photo globe, or anything "stormy".
 - [references/gas-giant-snippets.md](references/gas-giant-snippets.md):
   short TSL code for the Jupiter pieces that took the most rounds.
 - [references/air-composition.md](references/air-composition.md): one

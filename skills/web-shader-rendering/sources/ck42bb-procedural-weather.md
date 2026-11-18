@@ -1,6 +1,6 @@
 # CK42BB procedural-weather-threejs
 
-From [procedural-weather-threejs](https://github.com/CK42BB/procedural-weather-threejs), Kingsley (CK42BB), commit `26ad580`, MIT (notice at the end). Rain, snow, dust storms, ground fog, lightning, aurora, wet lens and frost overlays, a shared wind field, a weather state machine and a WGSL compute particle update. Teaching samples, not tested at Elsewhere's scales; read for ideas and port to TSL. Each original file follows unchanged.
+From [procedural-weather-threejs](https://github.com/CK42BB/procedural-weather-threejs), Kingsley (CK42BB), commit `26ad580`, MIT (notice at the end). Rain, snow, dust storms, ground fog, lightning, aurora, wet lens and frost overlays, a shared wind field, a weather state machine and a WGSL compute particle update. Teaching samples for reference when porting techniques to TSL. Each original file follows unchanged.
 
 ---
 

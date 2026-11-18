@@ -1,6 +1,6 @@
 # CK42BB procedural-stars-threejs
 
-From [procedural-stars-threejs](https://github.com/CK42BB/procedural-stars-threejs), Kingsley (CK42BB), commit `4c04e03`, MIT (notice at the end). Night sky in layers: sky dome, blackbody-coloured starfield with magnitude sizes and vertex twinkle, FBM Milky Way with dust lanes, billboard and raymarched nebulae (emission, absorption, reflection), moons with phases, meteors, comets, eclipses, plus a WGSL compute star catalogue. Teaching samples, not tested at Elsewhere's scales; read for ideas and port to TSL. Each original file follows unchanged.
+From [procedural-stars-threejs](https://github.com/CK42BB/procedural-stars-threejs), Kingsley (CK42BB), commit `4c04e03`, MIT (notice at the end). Night sky in layers: sky dome, blackbody-coloured starfield with magnitude sizes and vertex twinkle, FBM Milky Way with dust lanes, billboard and raymarched nebulae (emission, absorption, reflection), moons with phases, meteors, comets, eclipses, plus a WGSL compute star catalogue. Teaching samples for reference when porting techniques to TSL. Each original file follows unchanged.
 
 ---
 

@@ -1,9 +1,8 @@
 # Sky, atmosphere and haze: one air, composed once
 
-Adapted from a "threejs-sky-atmosphere-and-haze" skill that Andrew shared on
-11 Nov 2026 (author unknown), rewritten for planets seen from orbit down to a
-skim, on WebGPU with a WebGL2 fallback. It came in during the Jupiter
-"one air" work, when the haze at the planet's edge drew as a glow band.
+Adapted from a "threejs-sky-atmosphere-and-haze" skill (author unknown) for
+planet views from orbit down to a skim on WebGPU with a WebGL2 fallback.
+The approach addresses a glow band at Jupiter's limb.
 
 ## Pick one route and say what it claims
 

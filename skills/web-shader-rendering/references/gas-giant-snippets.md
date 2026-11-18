@@ -1,9 +1,6 @@
 # Gas giant cloud snippets (TSL)
 
-Short, working pieces from Jupiter's Nightscape-style cloud (Elsewhere,
-`src/universe-route/nightscape-clouds.js` and `gas-giant.js`, Nov 2026),
-trimmed to stand alone. They are the parts that took many rounds to get
-right. Read [gas-giant-clouds.md](gas-giant-clouds.md) first for why each
+Standalone snippets from a Nightscape-style Jupiter cloud renderer. Read [gas-giant-clouds.md](gas-giant-clouds.md) first for why each
 exists.
 
 Three.js r186-r187, `three/webgpu` and `three/tsl`. Inputs are named in

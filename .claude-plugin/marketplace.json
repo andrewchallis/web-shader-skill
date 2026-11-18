@@ -1,7 +1,7 @@
 {
   "name": "web-shader-rendering",
   "owner": {
-    "name": "Andrew Challis"
+    "name": "andrewchallis"
   },
   "metadata": {
     "description": "Claude skill with lessons for Three.js TSL shaders on WebGPU and WebGL2",

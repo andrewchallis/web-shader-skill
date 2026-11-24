@@ -179,6 +179,43 @@ testing, community/bug-report links and the historical section.
 - On WebGPU, work out any `fwidth` (or other derivative) before an `If` or
   a loop that branches per pixel, with `.toVar()`, and read textures inside
   such branches at `.level(0)`.
+- **A shared node first built inside a branch reads zero outside it.** TSL
+  puts a reused node (say `normalize(sunDir)`) in a variable set where it is
+  first used. If that is inside one `If` branch, a second branch that runs
+  without the first reads zero: a far look came out half as bright exactly
+  when its march was skipped. Give each branch its own fresh nodes, or
+  `.toVar()` the shared node at the top, before any branch. To check, dump
+  the WGSL three built with
+  `renderer.debug.getShaderAsync(scene, camera, mesh)`.
+- **An unused branch still costs.** A big `If`/`Else` arm that never runs
+  for a pixel still cost 1.7-2.9 ms over a full screen (RTX 4070, D3D).
+  Prefer separate passes or material variants over one uber-shader with
+  switches.
+- **Shader size: `Fn` without `setLayout` is pasted at every call,** and a JS
+  `for` loop unrolls, so a big march can be mostly copies (one cloud shader
+  was 472k characters, with one hash inlined 144 times). Give pure maths
+  functions a layout (`Fn(...).setLayout({ name, type, inputs })`) and use
+  `Loop` for marches that read textures. Layout function rules:
+  - Every input is a parameter. Name no uniform or texture inside: three
+    builds a layout function's code once per `Fn` and reuses it for every
+    material, and uniform names differ per material.
+  - One `Fn` per name and settings. Per-instance names break three's
+    sharing of identical WGSL, so each instance becomes a new pipeline.
+  - Don't call one layout function from inside another: on a material
+    rebuild three ordered them differently and built a second copy of the
+    shader.
+  - Measure WGSL size shader by shader before and after.
+- **Name nested loops.** Every `Loop` names its index `i` by default, so in
+  two nested loops the inner `i` hides the outer one. Pass a name
+  and read it by that name (`Loop({ start, end, name: 'j' }, ({ j }) => ...)`).
+- **A node's cache key is its id.** A copy of a node (same graph, new
+  object) builds the same WGSL again as a new shader. To warm up full-screen
+  passes ahead of time, compile them with the same node three draws them
+  with (for `QuadMesh`, its own full-screen triangle node), not a copy.
+- **`RTTNode` rebuilds its quad.** three's `RTTNode.setup` makes a new
+  context node each time a material that reads it builds, so small
+  render-to-texture quads rebuild with identical WGSL. Expect a few small
+  duplicate builds per RTT node; don't chase them as your own bug.
 
 ## WebGL2 fallback
 
@@ -200,6 +237,27 @@ testing, community/bug-report links and the historical section.
   first-load stalls. Precompile (draw hidden before showing) and reuse a
   small set of shader families.
 - Timestamp queries need the feature; report "unsupported", not zero.
+- **What keys a pipeline build.** Besides the shader, three keys a build on
+  things outside the material, and a mismatch between warm-up and the real
+  draw means a build on the first frame shown:
+  - **Lights.** Every lit material is keyed by the scene's shown lights.
+    Showing or hiding a light group rebuilds every lit material in the
+    scene, so lights kept hidden during warm-up cause rebuilds when they
+    first show. A material's own `lightsNode` fixes its key, but then it
+    builds its lit code at warm-up; always-shown lights add an unused
+    lighting block to every unlit shader.
+  - **MSAA sample count.** Preparing a scene at a different sample count
+    than it draws with still builds pipelines on the first frame. Warm up at
+    the draw's count.
+  - **Double-sided transparent materials** build two pipelines (back and
+    front faces), and again for any pass with a different set of outputs
+    (for example a low-resolution pass without MRT).
+  - Render target layout, MRT and render call depth: compile a pass at the
+    depth it draws at.
+- **Keep a compile failure local.** A WGSL compile error should fail only
+  the preparation of the scene that owns it. If one shared compile queue
+  waits on every pipeline promise, a promise that never settles holds every
+  later scene; give each wait a time limit and move on.
 - three.js `resolveTimestampsAsync` (r186) returns the GPU time of the
   newest frame it resolved, not a total since the last resolve. Don't
   divide it by the frames in between: that read 2-3x low on a slow scene.

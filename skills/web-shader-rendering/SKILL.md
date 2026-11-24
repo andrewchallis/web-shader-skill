@@ -130,8 +130,9 @@ are recorded in
 - [references/symptoms.md](references/symptoms.md): what a bad frame looks
   like, its cause and the fix. Read this first when debugging a look.
 - [references/webgpu-webgl2.md](references/webgpu-webgl2.md): TSL and
-  backend gotchas, WebGL2 limits, precision, pipeline count, software
-  renderer traps, and every useful awesome-webgpu link grouped by use
+  backend gotchas, WebGL2 limits, precision, pipeline count, shader size
+  (layout functions, named loops), what keys a pipeline build (lights,
+  MSAA, double-sided, node ids), software renderer traps, and every useful awesome-webgpu link grouped by use
   (debug and profile, performance, learning, tooling, demos).
 - [references/prior-art.md](references/prior-art.md): full open-source
   cloud renderers (Nightscape, takram three-clouds, joshbrew WebGPU noise

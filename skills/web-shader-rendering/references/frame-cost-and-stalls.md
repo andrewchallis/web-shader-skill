@@ -10,8 +10,9 @@ in a steady frame.
 Two things kept turning out true:
 
 - **The slow part was rarely where we first looked.** Three of the biggest
-  wins (31 MB of buffer uploads a frame, a canvas read back from the GPU,
-  9,600 rocks placed in JS) were not shaders at all. Profile the frame
+  costs found (about 31 MB of buffer uploads a frame, a canvas read back
+  from the GPU, 9,600 rocks placed in JS) were not shaders at all. The
+  last two are fixed and measured; the upload fix is not timed yet. Profile the frame
   (CPU profile, buffer upload trace, GPU timer) before changing a shader.
 - **Fewer pipelines or smaller shaders don't always mean faster frames.**
   Measure the thing a viewer sees: frame time, the longest pause, the
@@ -30,8 +31,8 @@ Two things kept turning out true:
   Treat brightness as a separate gain (current level / drawn level; redraw
   if it drifts more than 5%), not a reason to redraw. Skip drawing it while
   it can't show (faded out, or one body covers all four frame corners).
-  GPU ms off/on: gas giant 4.2 -> 2.1, Sun 3.3 -> 0.7, Earth 3.2 -> 2.8
-  (Earth gained least; we didn't find out why). Open
+  GPU ms off/on: gas giant 4.4 -> 2.2, Sun 3.3 -> 0.6; Earth gained
+  least (its number isn't in the notes). Open
   costs of the trick: a stale camera effect baked into the picture, and
   time-driven sky motion frozen between draws.
 - **Cull big patch meshes by view, but measure.** Drawing only the ground
@@ -46,7 +47,8 @@ Two things kept turning out true:
 - **CPU-bound frames: look at per-object JS.** A scene stuck at 60-65 fps
   with a 9.5 ms GPU frame was placing about 18,600 small objects in JS
   every frame (10-12 ms). A scalar loop with the orbit rate cached, same
-  results bit for bit, took it from 64 to 93 fps. Tools: a V8 CPU profile
+  results bit for bit, took it from 64.1 to 93.7 fps (one main/branch
+  pair on the desktop). Tools: a V8 CPU profile
   of the frame (Chrome traces of a few seconds run to gigabytes), and frame
   phase timing split into update, draw and submit.
 
@@ -58,14 +60,16 @@ Two things kept turning out true:
   (`Attributes.update`: `data.version < attribute.version || usage ===
   DynamicDrawUsage`). A streamed terrain with four 6-9 MB patch attributes
   sent about 31 MB a frame while gliding (11-16 GB in 12 s, 1.5-1.9 s of
-  `writeBuffer`). Keep the default usage, and when a patch slot changes,
-  mark only that slot with `addUpdateRange(start, count)` and set
-  `needsUpdate`. Add a test that reads three's source for that line, so an
+  `writeBuffer`; one trace of the old code, NOT CLEAN). The fix: keep the
+  default usage, and when a patch slot changes, mark only that slot with
+  `addUpdateRange(start, count)` and set `needsUpdate`. The saving is what
+  that trace and three's code imply; the fixed build has no timing run
+  yet. Add a test that reads three's source for that line, so an
   upgrade that changes the rule is noticed.
-- **Don't compact a big index buffer when one slot changes.** Packing
-  visible slots to the front re-uploads every slot after the first change
-  (up to a 20 MB index list, about 1 GB per glide). Zero culled slots in
-  place instead (degenerate triangles) and upload only those ranges.
+- **Compacting a big index buffer re-uploads it.** Packing visible
+  slots to the front re-uploads every slot after the first change (a 20 MB
+  index list, 907-1,072 MB per glide). See the open leads for the fix we
+  tried.
 - To find these, wrap `GPUQueue.prototype.writeBuffer` in a probe page
   and log bytes and ms by buffer size and by caller. Buffer sizes are
   usually enough to name the attribute.
@@ -205,8 +209,13 @@ None is measured yet.
 
 - The same `DynamicDrawUsage` pattern on other streamed meshes (a second
   terrain and a future-Earth surface): likely the same whole-buffer upload.
-- The index list re-pack on cull (zero in place) once the attribute fix is
-  timed.
+- Zeroing culled index slots in place (degenerate triangles) instead of
+  packing them. It cut index uploads from 907-1,072 MB to 19-35 MB a
+  glide, but its only desktop load drew far worse: 118-191 frames a glide
+  against 518-711, mean frame 63-101 ms against 17-23, worst 513-600 ms,
+  with the main thread idle. That run was NOT CLEAN (another app's GPU
+  load changed between loads) and the cause is unknown; the degenerate
+  triangles are suspected. Don't ship it without a clean run.
 - The remaining big fragment shader (about 124 atlas reads for city
   lights in one pass): fewer reads, or a pre-baked lower level far off.
 - Building the biggest shaders asynchronously from the start, so the one

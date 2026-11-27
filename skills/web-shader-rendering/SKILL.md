@@ -1,6 +1,6 @@
 ---
 name: web-shader-rendering
-description: Lessons for look-driven shader work in Three.js on WebGPU and WebGL2 (TSL node materials), above all ray-marched volumes - planet and gas giant clouds, atmospheres and haze, nebulae, gas. Use before writing, tuning or debugging such a shader, when a render "looks wrong" (pebbles, grain, fuzz, bands, seams, black frames, double horizons), or when planning how detail should change with camera distance.
+description: Lessons for look-driven shader work in Three.js on WebGPU and WebGL2 (TSL node materials), above all ray-marched volumes - planet and gas giant clouds, atmospheres and haze, nebulae, gas. Use before writing, tuning or debugging such a shader, when a render "looks wrong" (pebbles, grain, fuzz, bands, seams, black frames, double horizons), when planning how detail should change with camera distance, or before work on frame cost, load pauses or shader build stalls.
 ---
 
 # Web shader rendering
@@ -108,7 +108,14 @@ are recorded in
   close detail, a cloud floor with openings, cloud and colour carried along
   a flow, vortices and a storm to fly into, handing over from the photo
   without a seam, camera paths and fly-in measurement. Read before adding a
-  volume under a photo globe, or anything "stormy".
+  volume under a photo globe, or anything "stormy". Its last section
+  covers making a planet read bigger and the photo layer close in.
+- [references/frame-cost-and-stalls.md](references/frame-cost-and-stalls.md):
+  performance work on a big WebGPU app: what cut frame cost and load
+  pauses (sky cache, culling, buffer upload traps, readbacks, smaller
+  shaders, warm-up), what didn't (MSAA, culling a fragment-bound mesh,
+  leaving scenes out of warm-up), clean timing and open leads. Read before
+  any frame-cost, stall or loading change.
 - [references/gas-giant-snippets.md](references/gas-giant-snippets.md):
   short TSL code for the Jupiter pieces that took the most rounds.
 - [references/air-composition.md](references/air-composition.md): one

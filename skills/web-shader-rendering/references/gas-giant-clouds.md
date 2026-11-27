@@ -335,6 +335,8 @@ On 12 Nov 2026 a different renderer was tried in the lab: one thick marched
 layer over the photo, with a storm placed on a real oval. Its 31 rounds,
 including the hand-over from the photo, are in
 [cloud-layer-over-a-photo.md](cloud-layer-over-a-photo.md).
+Its later rebuild (25-27 Nov, about 60 rounds: scale, white zones higher,
+the photo layer close in) is at the end of that file.
 
 ## Still open (11 Nov 2026)
 

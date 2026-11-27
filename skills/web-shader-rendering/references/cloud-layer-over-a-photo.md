@@ -244,3 +244,80 @@ Each of these was done wrong at least once in these rounds.
 - Away from the storm the layer is heaps over a sheet, where real photos
   show a near-continuous deck whose swirls are colour and soft relief.
 - None of it has been judged in real-time motion or on WebGL2.
+
+## Scale and the approach (25-27 Nov 2026, about 60 lab rounds)
+
+The owner's brief was that the close cloud's "scale looks wrong, is
+basically a single layer of 3d clouds", with a racing game set on Jupiter
+as the new bar: crisp cauliflower heaps, giant walls above the camera, a
+camera inside the cloudscape. All of it was built behind lab flags; most
+of it stayed there.
+
+### Scale: what worked
+
+- **Shrink the whole layer together, never one size.** Passing the
+  planet radius times k to the cloud (every km in the layer scales with it)
+  made the world read about k times bigger at the same cost. Shrinking only
+  the cell, thickness or depth sizes drew a blank blanket and cost more,
+  because the floor sheet, hump and storm sizes are absolute km. With the
+  layer half as tall the same camera path flies twice as high over it and
+  looks down on the storm. Twice smaller was picked; three times was
+  specky and spiky.
+- **The curve can't carry the scale; the heaps must.** At 500-2,000 km
+  over a gas giant the horizon's curve matches Earth's from 45-180 km up.
+  Bigger billows read bigger; more horizon haze barely showed.
+- **Stand the white zones higher.** Lift the cloud by whiteness (min/max
+  of the colour channels), not brightness, or the orange belts count as
+  zones. Read the map at a coarse level, or the step is a long slope. Too
+  much lift (3x and up) gave grey heaps and blank blobs.
+- **Judge looks from frozen poses.** App stills in real-time play land at
+  different heights per look and mislead. Freeze a lab path at fixed times.
+
+### Scale: what didn't
+
+- Opaque domain-warped decks: polished marble or chrome, twice.
+- A second marched layer over the first: 1.4-1.6x the cost and muddier.
+- Tall marched walls: a straight cut along a line when the camera was
+  above them (the cloud was only drawn inside a fixed shell 858 km up;
+  four rounds failed on this), then smooth slab faces far off, because a
+  far march step is hundreds of km and any faint density draws as an
+  opaque slab. Separate traced cloud bodies worked better close in.
+
+### The photo layer close in
+
+Once the camera is down near the photo, the photo is the top layer and has
+to read as cloud until the marched cloud takes over.
+
+- **Haze only over the ray's own stretch of air.** A layer drawn from far
+  out laid on haze for the whole camera distance (64% or more at
+  45,000 km) and drew a cream ball twice the globe's brightness. Count
+  haze only inside the layer's shell.
+- **Light it with the globe's own formula** and the hand-over goes
+  unseen.
+- **Never lift the photo layer over a storm's opening.** Opening it left a
+  hole; keeping it down and handing each pixel to the marched cloud, nearest
+  first, by km per pixel left no hole and no seam.
+- **Exposure by height is shared.** A height-based exposure on the marched
+  cloud dimmed the photo layer too, and later made the fade surge to 180%
+  brightness until the cloud's exposure was held over the fade.
+- **Draw the 3D clouds in everywhere at once.** A fade by camera height
+  (not by pixel) had no seam, but starting it too early smeared the photo
+  below 8,000 km.
+- **Let the real 3D cloud show through the photo** (about 30% from
+  9,000 km). It has the same shapes as the cloud that follows, so no kink.
+  A drawn copy of the cloud's pattern on the photo read as stucco or
+  embossed plaster.
+- **Draw the photo at full size over a half-size cloud pass.** The photo
+  stays sharp and nothing pops.
+- Lumps lit from the photo (suede, stained fabric), shorter streaks
+  (grit), small puffs on top (grime or nothing): all dropped. Only
+  crisper streaks helped.
+- **Along-band views hide band edges.** When both the view and the Sun run
+  along the bands, a sheet cut from the photo with parallax shows nothing
+  at the band edges but a soft rim.
+- **Preview look ideas on the CPU first** (a few-line script that shades
+  the map) before a GPU round. Several looks were rejected from a CPU
+  preview alone.
+
+Still open at the end: a bright stepped line 1-2 px on the planet's edge
+while the 3D cloud shows through, and no timing in the app.
